@@ -1,0 +1,71 @@
+[
+  {
+    "trigger": { "url-filter": "^https?://([^/]+\\.)?doubleclick\\.net" },
+    "action": { "type": "block" }
+  },
+  {
+    "trigger": { "url-filter": "^https?://([^/]+\\.)?googleadservices\\.com" },
+    "action": { "type": "block" }
+  },
+  {
+    "trigger": { "url-filter": "^https?://([^/]+\\.)?googlesyndication\\.com" },
+    "action": { "type": "block" }
+  },
+  {
+    "trigger": { "url-filter": "^https?://([^/]+\\.)?google-analytics\\.com" },
+    "action": { "type": "block" }
+  },
+  {
+    "trigger": { "url-filter": "^https?://([^/]+\\.)?googletagservices\\.com" },
+    "action": { "type": "block" }
+  },
+  {
+    "trigger": { "url-filter": "^https?://([^/]+\\.)?googletagmanager\\.com" },
+    "action": { "type": "block" }
+  },
+  {
+    "trigger": { "url-filter": "^https?://imasdk\\.googleapis\\.com" },
+    "action": { "type": "block" }
+  },
+  {
+    "trigger": { "url-filter": "^https?://([^/]+\\.)?moatads\\.com" },
+    "action": { "type": "block" }
+  },
+  {
+    "trigger": { "url-filter": "^https?://([^/]+\\.)?adservice\\.google\\." },
+    "action": { "type": "block" }
+  },
+  {
+    "trigger": { "url-filter": "/pagead/" },
+    "action": { "type": "block" }
+  },
+  {
+    "trigger": { "url-filter": "/pagead2/" },
+    "action": { "type": "block" }
+  },
+  {
+    "trigger": {
+      "url-filter": "/ptracking",
+      "if-domain": ["*youtube.com"]
+    },
+    "action": { "type": "block" }
+  },
+  {
+    "trigger": {
+      "url-filter": "/api/stats/ads",
+      "if-domain": ["*youtube.com"]
+    },
+    "action": { "type": "block" }
+  },
+  {
+    "trigger": {
+      "url-filter": "/get_midroll_info",
+      "if-domain": ["*youtube.com"]
+    },
+    "action": { "type": "block" }
+  },
+  {
+    "trigger": { "url-filter": "^https?://([^/]+\\.)?2mdn\\.net" },
+    "action": { "type": "block" }
+  }
+]
