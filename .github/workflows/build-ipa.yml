@@ -1,0 +1,69 @@
+name: Build IPA (unsigned)
+
+# Builds AdFreeTube on a GitHub-hosted macOS runner and uploads an UNSIGNED
+# .ipa as a workflow artifact. Code signing is intentionally disabled so the
+# build needs no certificates/secrets — download the artifact and sign it
+# yourself (or resign with your own tooling).
+
+on:
+  push:
+    branches:
+      - claude/blocked-youtube-ios-app-r3xvr
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: macos-14
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select latest stable Xcode
+        run: sudo xcode-select -switch /Applications/Xcode.app
+
+      - name: Show toolchain
+        run: |
+          xcodebuild -version
+          swift --version
+
+      - name: Build (unsigned, Release)
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -project AdFreeTube.xcodeproj \
+            -scheme AdFreeTube \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGN_ENTITLEMENTS="" \
+            clean build
+
+      - name: Package unsigned IPA
+        run: |
+          set -euo pipefail
+          APP_PATH="build/Build/Products/Release-iphoneos/AdFreeTube.app"
+          if [ ! -d "$APP_PATH" ]; then
+            echo "::error::Build product not found at $APP_PATH"
+            ls -R build/Build/Products || true
+            exit 1
+          fi
+          rm -rf Payload AdFreeTube-unsigned.ipa
+          mkdir -p Payload
+          cp -R "$APP_PATH" Payload/
+          # Store-compatible zip layout: the Payload/ dir at the archive root.
+          ditto -c -k --sequesterRsrc --keepParent Payload AdFreeTube-unsigned.ipa
+          echo "Built unsigned IPA:"
+          ls -lh AdFreeTube-unsigned.ipa
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AdFreeTube-unsigned-ipa
+          path: AdFreeTube-unsigned.ipa
+          if-no-files-found: error
+          retention-days: 30

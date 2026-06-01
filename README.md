@@ -51,6 +51,23 @@ AdFreeTube/
 
 You said you'll handle signing — here's the quickest path to an IPA.
 
+### Option 0 — GitHub Actions (no Mac required)
+`.github/workflows/build-ipa.yml` builds an **unsigned** `.ipa` on a
+GitHub-hosted macOS runner and uploads it as a workflow artifact. It runs
+automatically on every push to the dev branch, or on demand via the **Actions**
+tab → **Build IPA (unsigned)** → **Run workflow**. Download the
+`AdFreeTube-unsigned-ipa` artifact, then sign it with your own certificate:
+
+```bash
+# Resign the downloaded unsigned IPA with your identity + provisioning profile
+unzip -q AdFreeTube-unsigned.ipa -d resign && cd resign
+cp /path/to/your.mobileprovision Payload/AdFreeTube.app/embedded.mobileprovision
+codesign -f -s "Apple Development: you@example.com (XXXXXXXXXX)" \
+  --entitlements your.entitlements Payload/AdFreeTube.app
+ditto -c -k --sequesterRsrc --keepParent Payload ../AdFreeTube-signed.ipa
+```
+(No signing secrets are stored in CI — it builds unsigned on purpose.)
+
 ### Option A — Xcode GUI
 1. `open AdFreeTube.xcodeproj`
 2. Select the **AdFreeTube** target → **Signing & Capabilities** → pick your
