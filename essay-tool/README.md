@@ -1,0 +1,125 @@
+# Essay Tool
+
+A personal web app for iterating on your college application essays with an AI
+**Council**. It starts with the **Personal Statement** (the Common App essay).
+
+You move an essay through three stages:
+
+1. **Outline** — Write your own outline, or give the AI a topic and let it build
+   one. Edit it freely.
+2. **Draft & Council** — Pick the Common App prompt your essay answers, and the
+   top Claude writing model (Opus 4.8) writes a full draft from your outline.
+   The draft is then reviewed by a three-member **Council**, and run through a
+   grammar pass (LanguageTool + a Claude proofreading pass).
+3. **Edit** — Revise the essay yourself and send it back to the Council. Every
+   round is saved so you can see how the essay and the feedback evolve.
+
+Each essay you create is saved; the home page lists them all so you can keep
+iterating over the application season.
+
+## The Council
+
+Three AI editors, each with a distinct lens (chosen so the feedback doesn't
+overlap):
+
+| Critic | Lens |
+| --- | --- |
+| **The Dean (Community Fit)** | A senior administrator asking: will this person make our campus community better? Reads for character, generosity, curiosity, and red flags. |
+| **The Admissions Reader** | A real admissions officer on their 50th essay of the day: does it stand out, reveal character, and avoid clichés? Judges the hook and the ending hard. |
+| **The Skeptic** | The devil's advocate: hunts for overdone topics, empty bragging, "telling" instead of "showing," and anything that rings false — and says how to fix it. |
+
+You can change, add, or remove critics by editing `COUNCIL` in
+[`src/lib/prompts.ts`](src/lib/prompts.ts).
+
+## Tech
+
+- **Next.js** (App Router) + **TypeScript** + **Tailwind CSS**
+- **Prisma** + **SQLite** (zero-config locally; one file you can deploy anywhere)
+- **@anthropic-ai/sdk** on `claude-opus-4-8` (adaptive thinking)
+- **LanguageTool** for grammar mechanics
+- Single-password login (one user)
+
+## Running it locally
+
+You need [Node.js 18+](https://nodejs.org) and an
+[Anthropic API key](https://console.anthropic.com/settings/keys).
+
+```bash
+cd essay-tool
+cp .env.example .env        # then edit .env (see below)
+npm install
+npm run db:push             # creates the SQLite tables
+npm run dev                 # http://localhost:3000
+```
+
+Edit `.env`:
+
+```
+ANTHROPIC_API_KEY=sk-ant-...        # your key
+APP_PASSWORD=pick-a-password        # what you'll type to log in
+SESSION_SECRET=...                  # run the command below to generate
+DATABASE_URL="file:./dev.db"        # fine as-is for local
+```
+
+Generate a session secret:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
+## Deploying it online
+
+The app is a standard long-running Next.js server with a SQLite file, so it runs
+on any host that gives you a **persistent disk** (Render, Railway, Fly.io, a VPS,
+etc.). A `Dockerfile` is included.
+
+1. Set these environment variables on your host:
+   - `ANTHROPIC_API_KEY`
+   - `APP_PASSWORD`
+   - `SESSION_SECRET`
+   - `DATABASE_URL` — point it at a file on the persistent volume, e.g.
+     `file:/data/essays.db`
+2. Mount a volume at `/data` (so your essays survive restarts/redeploys).
+3. Build & run the container (it runs `prisma db push` then `next start`):
+
+```bash
+docker build -t essay-tool .
+docker run -p 3000:3000 --env-file .env -v $(pwd)/data:/data essay-tool
+```
+
+> **Note on Vercel:** Vercel's filesystem is ephemeral, so SQLite won't persist
+> there. To use Vercel, switch the Prisma datasource to Postgres (e.g. Neon) and
+> set `DATABASE_URL` to the Postgres connection string — the rest of the app is
+> unchanged.
+
+### Optional: self-hosted LanguageTool
+
+The free public LanguageTool API is rate-limited. For heavy use, run your own and
+point `LANGUAGETOOL_URL` at it:
+
+```bash
+docker run -d -p 8081:8010 erikvl87/languagetool
+# then set LANGUAGETOOL_URL=http://localhost:8081/v2/check
+```
+
+## Project layout
+
+```
+essay-tool/
+  prisma/schema.prisma         Essay / Revision / Critique / GrammarReport models
+  src/
+    lib/
+      anthropic.ts             Claude client + completion helper (Opus 4.8)
+      prompts.ts               Common App prompts, the 3 critics, stage prompts
+      grammar.ts               LanguageTool + Claude proofreading
+      auth.ts                  Signed session cookie (single password)
+      db.ts                    Prisma client
+      revisions.ts             Snapshot-per-review-round helper
+    middleware.ts              Password gate for the whole app
+    components/                Markdown renderer, ReviewPanel
+    app/
+      login/                   Login page
+      page.tsx                 Dashboard (new essay + saved list)
+      essay/[id]/              The editor (3-stage workspace)
+      api/                     essays CRUD + outline/draft/council/grammar
+```

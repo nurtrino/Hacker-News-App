@@ -1,0 +1,83 @@
+// Essay Tool — data model
+// A single-user tool for iterating on college application essays.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// One essay the student is working on. For now, always a Personal Statement.
+model Essay {
+  id        String   @id @default(cuid())
+  title     String
+  type      String   @default("PERSONAL_STATEMENT")
+
+  // Stage 1 inputs
+  topic     String   @default("") // optional seed for AI-generated outlines
+  outline   String   @default("")
+
+  // The prompt the essay answers (a Common App prompt id; see src/lib/prompts.ts)
+  promptId  String?
+
+  // The current working draft (Stage 2 / Stage 3)
+  draft     String   @default("")
+
+  // OUTLINE | DRAFT | EDIT — which stage of the workflow the essay is in
+  stage     String   @default("OUTLINE")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  revisions Revision[]
+}
+
+// A snapshot of the draft each time it is sent to the Council, so the student
+// can see how the essay (and the feedback) evolved across iterations.
+model Revision {
+  id        String   @id @default(cuid())
+  essayId   String
+  essay     Essay    @relation(fields: [essayId], references: [id], onDelete: Cascade)
+
+  content   String   // the draft text at the moment it was submitted
+  round     Int      @default(1)
+
+  createdAt DateTime @default(now())
+
+  critiques      Critique[]
+  grammarReports GrammarReport[]
+
+  @@index([essayId])
+}
+
+// One editorial critique from a member of the Council.
+model Critique {
+  id         String   @id @default(cuid())
+  revisionId String
+  revision   Revision @relation(fields: [revisionId], references: [id], onDelete: Cascade)
+
+  critic     String   // stable key, e.g. "community_fit"
+  criticName String   // display name, e.g. "The Dean (Community Fit)"
+  content    String   // the critique markdown
+
+  createdAt  DateTime @default(now())
+
+  @@index([revisionId])
+}
+
+// Output of the grammar pass (LanguageTool and/or the Claude proofreader).
+model GrammarReport {
+  id         String   @id @default(cuid())
+  revisionId String
+  revision   Revision @relation(fields: [revisionId], references: [id], onDelete: Cascade)
+
+  source     String   // "LANGUAGETOOL" | "CLAUDE"
+  content    String   // JSON (LanguageTool matches) or markdown (Claude)
+
+  createdAt  DateTime @default(now())
+
+  @@index([revisionId])
+}

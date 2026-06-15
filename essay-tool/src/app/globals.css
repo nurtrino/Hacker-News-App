@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  background-color: theme("colors.paper");
+  color: theme("colors.ink");
+}
+
+/* Render markdown-ish critique text nicely without a heavy dependency. */
+.prose-essay p {
+  margin-bottom: 0.75rem;
+  line-height: 1.7;
+}
+.prose-essay strong {
+  font-weight: 700;
+}
+.prose-essay ul,
+.prose-essay ol {
+  margin: 0.5rem 0 0.75rem 1.25rem;
+}
+.prose-essay ul {
+  list-style: disc;
+}
+.prose-essay ol {
+  list-style: decimal;
+}
+.prose-essay li {
+  margin-bottom: 0.35rem;
+  line-height: 1.6;
+}
