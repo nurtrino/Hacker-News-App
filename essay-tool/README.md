@@ -73,6 +73,33 @@ The app is a standard long-running Next.js server with a SQLite file, so it runs
 on any host that gives you a **persistent disk** (Render, Railway, Fly.io, a VPS,
 etc.). A `Dockerfile` is included.
 
+### Deploy to Render (recommended)
+
+A Render **Blueprint** lives at the repo root: [`render.yaml`](../render.yaml).
+It defines the web service, a 1 GB persistent disk mounted at `/data`, and the
+environment variables.
+
+> ⚠️ The persistent disk requires a **paid instance** (Starter, ~$7/mo). On
+> Render's free tier the disk is wiped on every deploy, which would delete your
+> essays. The blueprint is set to `plan: starter` for this reason.
+
+Steps:
+
+1. Push this repo to GitHub (already done if you're reading this on GitHub).
+2. In the Render dashboard: **New → Blueprint**, connect the repo, and pick the
+   `essay-tool` branch. Render reads `render.yaml` and proposes the service.
+3. Render will prompt for the two secret values (they're marked `sync: false`):
+   - `ANTHROPIC_API_KEY` — your Anthropic key
+   - `APP_PASSWORD` — the password you'll use to log in
+   `SESSION_SECRET` is generated automatically; `DATABASE_URL` is preset to the
+   disk.
+4. Click **Apply**. The first build runs the Dockerfile, `prisma db push`
+   creates the database on the disk, and the app starts.
+5. Open the service URL, log in with your `APP_PASSWORD`, and start writing.
+
+To update later, push to the `essay-tool` branch — `autoDeploy` is on, so Render
+rebuilds automatically.
+
 1. Set these environment variables on your host:
    - `ANTHROPIC_API_KEY`
    - `APP_PASSWORD`

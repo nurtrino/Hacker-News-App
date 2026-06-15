@@ -1,0 +1,35 @@
+# Render Blueprint for the Essay Tool.
+# Docs: https://render.com/docs/blueprint-spec
+#
+# This deploys essay-tool/ as a Docker web service with a persistent disk so
+# your SQLite database (and therefore all your essays) survives restarts and
+# redeploys. A persistent disk requires a paid instance type (Starter or above).
+services:
+  - type: web
+    name: essay-tool
+    runtime: docker
+    plan: starter # required for the persistent disk below; free tier has no durable disk
+    rootDir: essay-tool # the app lives in this subdirectory of the repo
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /login
+    autoDeploy: true
+    disk:
+      name: essay-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      # Set these two in the Render dashboard (they are secrets, not committed):
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: APP_PASSWORD
+        sync: false
+      # Render generates a strong random value once and keeps it stable across
+      # deploys, so your login sessions stay valid.
+      - key: SESSION_SECRET
+        generateValue: true
+      # SQLite file lives on the mounted persistent disk.
+      - key: DATABASE_URL
+        value: file:/data/essays.db
+      - key: NODE_ENV
+        value: production
