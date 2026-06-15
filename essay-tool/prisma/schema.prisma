@@ -62,6 +62,7 @@ model Critique {
   critic     String   // stable key, e.g. "community_fit"
   criticName String   // display name, e.g. "The Dean (Community Fit)"
   content    String   // the critique markdown
+  order      Int      @default(0) // position in the sequential relay
 
   createdAt  DateTime @default(now())
 

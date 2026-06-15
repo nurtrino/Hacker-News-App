@@ -149,6 +149,59 @@ Requirements:
 Follow the student's outline closely — it reflects their real experience. Output only the essay text itself (no title, no preamble, no word count, no commentary).`;
 }
 
+// Build the message a council member reads. Every member critiques the SAME
+// original draft, but later members also see the notes earlier members left so
+// they can build on or push back against them (rather than repeat them).
+export function buildCouncilUser(
+  promptContext: string,
+  draft: string,
+  priorNotes: string
+): string {
+  const prior = priorNotes.trim()
+    ? `Other members of the council have already reviewed this same essay. Their notes are below. Don't just repeat them — focus on your own lens, and feel free to build on or respectfully disagree with their points.\n\n${priorNotes}\n\n---\n\n`
+    : "";
+  return `${promptContext}${prior}Here is the essay to critique:\n\n${draft}`;
+}
+
+// --- The Writer ----------------------------------------------------------
+// A separate agent that produces a revised draft on request: either applying
+// the council's feedback, following the student's own instructions, or both.
+
+export const WRITER_SYSTEM = `You are the Writer — an extraordinary college essay writer acting as the student's collaborator on their Common App personal statement (≤650 words).
+
+Your job is to produce a revised version of the essay based on the instructions you're given. Rules:
+- This is the student's essay, not yours. Preserve their authentic first-person voice, their specific details, and their personality. Do not sand them down into generic polish.
+- Make the requested changes precisely and thoughtfully. Improve what you're asked to improve; leave the rest largely intact unless it clearly serves the change.
+- Keep it within the 650-word limit, show-don't-tell, and free of clichés and "AI-sounding" phrasing.
+- Output ONLY the full revised essay text — no title, no preamble, no word count, no notes or commentary.`;
+
+interface WriterUserParts {
+  promptText?: string;
+  draft: string;
+  councilNotes?: string;
+  studentNotes?: string;
+}
+
+export function buildWriterUser({
+  promptText,
+  draft,
+  councilNotes,
+  studentNotes,
+}: WriterUserParts): string {
+  let msg = promptText
+    ? `The essay responds to this Common App prompt:\n"${promptText}"\n\n`
+    : "";
+  msg += `Here is the current essay:\n\n${draft}\n\n`;
+  if (councilNotes?.trim()) {
+    msg += `The review council gave the following feedback. Weigh it and incorporate the most valuable points while keeping the essay coherent, authentic, and within the word limit:\n\n${councilNotes}\n\n`;
+  }
+  if (studentNotes?.trim()) {
+    msg += `The student also asked you to make these specific changes — prioritize these:\n\n${studentNotes}\n\n`;
+  }
+  msg += `Return the full revised essay.`;
+  return msg;
+}
+
 export const GRAMMAR_CLAUDE_SYSTEM = `You are a meticulous proofreader and line editor for college admissions essays. You are given an essay. Your job is to catch issues a grammar checker misses: clarity, word choice, awkward phrasing, rhythm, wordiness, weak verbs, tense consistency, and tone.
 
 Return your findings as markdown:

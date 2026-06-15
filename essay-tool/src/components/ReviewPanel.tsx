@@ -96,15 +96,22 @@ export default function ReviewPanel({
     <div className="space-y-6">
       {critiques.length > 0 && (
         <div className="space-y-4">
-          <h3 className="font-serif text-lg font-semibold">The Council</h3>
-          {critiques.map((c) => (
+          <div>
+            <h3 className="font-serif text-lg font-semibold">The Council</h3>
+            <p className="text-xs text-stone-400">
+              Reviewed in order — each member saw the earlier notes.
+            </p>
+          </div>
+          {critiques.map((c, i) => (
             <div
               key={c.id}
               className={`rounded-xl border border-stone-200 border-l-4 bg-white p-4 ${
                 CRITIC_TINT[c.critic] ?? "border-l-stone-300"
               }`}
             >
-              <h4 className="font-semibold">{c.criticName}</h4>
+              <h4 className="font-semibold">
+                {i + 1}. {c.criticName}
+              </h4>
               <div className="mt-2 text-sm text-stone-700">
                 <Markdown text={c.content} />
               </div>

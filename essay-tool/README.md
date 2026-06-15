@@ -9,10 +9,22 @@ You move an essay through three stages:
    one. Edit it freely.
 2. **Draft & Council** — Pick the Common App prompt your essay answers, and the
    top Claude writing model (Opus 4.8) writes a full draft from your outline.
-   The draft is then reviewed by a three-member **Council**, and run through a
-   grammar pass (LanguageTool + a Claude proofreading pass).
-3. **Edit** — Revise the essay yourself and send it back to the Council. Every
-   round is saved so you can see how the essay and the feedback evolve.
+   From here you work the revision loop:
+   - **The Writer** — give it notes ("tighten the opening", "cut the third
+     paragraph") and it proposes a revised draft. You see the changes as a diff
+     and **Accept** or **Discard** them — nothing is applied until you accept.
+   - **The Council** — send the draft to the three-member Council. Members
+     review the *same* draft **in sequence**, and each one sees the earlier
+     members' notes so they build on each other (notes only — they don't rewrite
+     your text).
+   - **Apply the feedback** — have the Writer fold the Council's notes (plus any
+     of your own) into a proposed revision, then accept or push back and send it
+     to the Council again.
+   - A **grammar pass** (LanguageTool + a Claude proofreading pass) checks
+     mechanics and style.
+3. **Edit** — Keep revising the essay yourself and looping it back through the
+   Writer and Council. Every round is saved so you can see how the essay and the
+   feedback evolve.
 
 Each essay you create is saved; the home page lists them all so you can keep
 iterating over the application season.
@@ -28,8 +40,10 @@ overlap):
 | **The Admissions Reader** | A real admissions officer on their 50th essay of the day: does it stand out, reveal character, and avoid clichés? Judges the hook and the ending hard. |
 | **The Skeptic** | The devil's advocate: hunts for overdone topics, empty bragging, "telling" instead of "showing," and anything that rings false — and says how to fix it. |
 
-You can change, add, or remove critics by editing `COUNCIL` in
-[`src/lib/prompts.ts`](src/lib/prompts.ts).
+The Council reviews **in the order the critics are listed**, and each member is
+shown the earlier members' notes. You can change, reorder, add, or remove critics
+by editing `COUNCIL` in [`src/lib/prompts.ts`](src/lib/prompts.ts). The Writer's
+behavior lives in the same file (`WRITER_SYSTEM`).
 
 ## Tech
 

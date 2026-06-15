@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { complete } from "@/lib/anthropic";
-import { COUNCIL, getPrompt } from "@/lib/prompts";
+import { COUNCIL, getPrompt, buildCouncilUser } from "@/lib/prompts";
 import { getOrCreateCurrentRevision } from "@/lib/revisions";
 
 export const maxDuration = 300;
 
-// Send the current draft to the Council: run all three critics in parallel
-// and store their critiques against a snapshot revision.
+// Send the current draft to the Council. Members review the SAME draft, but in
+// sequence: each member also sees the notes left by earlier members so they can
+// build on them. Critiques are stored against a snapshot revision.
 export async function POST(
   req: NextRequest,
   { params }: { params: { id: string } }
@@ -37,31 +38,34 @@ export async function POST(
   try {
     const revision = await getOrCreateCurrentRevision(params.id, draft);
 
-    // Run the three critics concurrently.
-    const results = await Promise.all(
-      COUNCIL.map((critic) =>
-        complete({
-          system: critic.system,
-          user: `${promptContext}Here is the essay to critique:\n\n${draft}`,
-          maxTokens: 4000,
-        }).then((content) => ({ critic, content }))
-      )
-    );
+    // Run the critics one at a time, feeding each the earlier members' notes.
+    const results: { critic: (typeof COUNCIL)[number]; content: string }[] = [];
+    let priorNotes = "";
+    for (const critic of COUNCIL) {
+      const content = await complete({
+        system: critic.system,
+        user: buildCouncilUser(promptContext, draft, priorNotes),
+        maxTokens: 4000,
+      });
+      results.push({ critic, content });
+      priorNotes += `\n\n## ${critic.name}\n${content}`;
+    }
 
     // Replace any prior critiques on this revision (supports re-running).
     await prisma.critique.deleteMany({ where: { revisionId: revision.id } });
     await prisma.critique.createMany({
-      data: results.map(({ critic, content }) => ({
+      data: results.map(({ critic, content }, order) => ({
         revisionId: revision.id,
         critic: critic.key,
         criticName: critic.name,
         content,
+        order,
       })),
     });
 
     const critiques = await prisma.critique.findMany({
       where: { revisionId: revision.id },
-      orderBy: { createdAt: "asc" },
+      orderBy: { order: "asc" },
     });
 
     return NextResponse.json({ revisionId: revision.id, round: revision.round, critiques });

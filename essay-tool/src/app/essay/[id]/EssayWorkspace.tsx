@@ -7,6 +7,7 @@ import ReviewPanel, {
   type Critique,
   type GrammarReport,
 } from "@/components/ReviewPanel";
+import DraftDiff from "@/components/DraftDiff";
 
 interface Revision {
   id: string;
@@ -50,8 +51,14 @@ export default function EssayWorkspace({ initialEssay }: { initialEssay: Essay }
   const [revisions, setRevisions] = useState<Revision[]>(initialEssay.revisions);
 
   const [saveState, setSaveState] = useState<"idle" | "saving" | "saved">("idle");
-  const [busy, setBusy] = useState<null | "outline" | "draft" | "council" | "grammar">(null);
+  const [busy, setBusy] = useState<
+    null | "outline" | "draft" | "council" | "grammar" | "writer"
+  >(null);
   const [error, setError] = useState("");
+
+  // The Writer's proposed revision (not yet accepted into the draft).
+  const [writerNotes, setWriterNotes] = useState("");
+  const [proposal, setProposal] = useState<string | null>(null);
 
   const id = initialEssay.id;
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -155,6 +162,32 @@ export default function EssayWorkspace({ initialEssay }: { initialEssay: Essay }
     setBusy(null);
     if (res.ok) await refreshRevisions();
     else setError(data.error ?? "Grammar check failed.");
+  }
+
+  async function reviseWithWriter(applyCouncil: boolean) {
+    setError("");
+    setBusy("writer");
+    const res = await fetch(`/api/essays/${id}/writer`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ draft, notes: writerNotes, applyCouncil }),
+    });
+    const data = await res.json();
+    setBusy(null);
+    if (res.ok) setProposal(data.proposal);
+    else setError(data.error ?? "The writer failed to respond.");
+  }
+
+  async function acceptProposal() {
+    if (proposal === null) return;
+    setDraft(proposal);
+    await persist({ draft: proposal });
+    setProposal(null);
+    setWriterNotes("");
+  }
+
+  function discardProposal() {
+    setProposal(null);
   }
 
   function goToStage(next: Stage) {
@@ -372,6 +405,80 @@ export default function EssayWorkspace({ initialEssay }: { initialEssay: Essay }
                 </button>
               )}
             </div>
+
+            {/* The Writer */}
+            <div className="rounded-xl border border-stone-200 bg-white p-4">
+              <h3 className="font-serif text-lg font-semibold">The Writer</h3>
+              <p className="mt-1 text-sm text-stone-500">
+                Give the writer notes to revise your draft, or have it fold in
+                the council&apos;s feedback. You&apos;ll see the proposed changes
+                before anything is applied.
+              </p>
+              <textarea
+                value={writerNotes}
+                onChange={(e) => setWriterNotes(e.target.value)}
+                rows={3}
+                placeholder="e.g. Tighten the opening, cut the third paragraph, make the ending less neat…"
+                className="mt-3 w-full rounded-lg border border-stone-300 p-3 text-sm outline-none focus:border-accent"
+              />
+              <div className="mt-3 flex flex-wrap gap-3">
+                <button
+                  onClick={() => reviseWithWriter(false)}
+                  disabled={busy !== null || !writerNotes.trim()}
+                  className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-40"
+                >
+                  {busy === "writer" ? "Writing…" : "✨ Revise with my notes"}
+                </button>
+                <button
+                  onClick={() => reviseWithWriter(true)}
+                  disabled={busy !== null || !latest?.critiques.length}
+                  title={
+                    !latest?.critiques.length
+                      ? "Send the draft to the Council first"
+                      : ""
+                  }
+                  className="rounded-lg border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-stone-400 disabled:opacity-40"
+                >
+                  Apply council feedback{writerNotes.trim() ? " + my notes" : ""}
+                </button>
+              </div>
+            </div>
+
+            {/* Proposed revision (from the Writer) */}
+            {proposal !== null && (
+              <div className="rounded-xl border-2 border-accent bg-amber-50/40 p-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-serif text-lg font-semibold">
+                    Proposed revision
+                  </h3>
+                  <span className="text-xs text-stone-500">
+                    <span className="rounded bg-green-100 px-1 text-green-900">
+                      added
+                    </span>{" "}
+                    <span className="rounded bg-red-100 px-1 text-red-800 line-through">
+                      removed
+                    </span>
+                  </span>
+                </div>
+                <div className="mt-3 max-h-96 overflow-y-auto rounded-lg bg-white p-4">
+                  <DraftDiff before={draft} after={proposal} />
+                </div>
+                <div className="mt-3 flex gap-3">
+                  <button
+                    onClick={acceptProposal}
+                    className="rounded-lg bg-ink px-4 py-2 text-sm font-medium text-white transition hover:bg-stone-700"
+                  >
+                    Accept changes
+                  </button>
+                  <button
+                    onClick={discardProposal}
+                    className="rounded-lg border border-stone-300 px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-stone-400"
+                  >
+                    Discard
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Right: review panel */}

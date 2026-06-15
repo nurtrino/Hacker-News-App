@@ -12,7 +12,7 @@ export async function GET(
       revisions: {
         orderBy: { round: "desc" },
         include: {
-          critiques: { orderBy: { createdAt: "asc" } },
+          critiques: { orderBy: { order: "asc" } },
           grammarReports: { orderBy: { createdAt: "asc" } },
         },
       },
