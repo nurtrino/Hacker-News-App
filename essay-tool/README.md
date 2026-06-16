@@ -39,6 +39,7 @@ overlap):
 | **The Dean (Community Fit)** | A senior administrator asking: will this person make our campus community better? Reads for character, generosity, curiosity, and red flags. |
 | **The Admissions Reader** | A real admissions officer on their 50th essay of the day: does it stand out, reveal character, and avoid clichés? Judges the hook and the ending hard. |
 | **The Skeptic** | The devil's advocate: hunts for overdone topics, empty bragging, "telling" instead of "showing," and anything that rings false — and says how to fix it. |
+| **The AI-Tell Detector** | Trained on the known markers of AI-generated prose (tell-tale vocabulary like "tapestry"/"testament", antithesis templates, the rule of three, tidy-bow endings, em-dash overuse). Flags anything that would make an admissions reader suspect a bot wrote it, and suggests more human phrasing. |
 
 The Council reviews **in the order the critics are listed**, and each member is
 shown the earlier members' notes. You can change, reorder, add, or remove critics

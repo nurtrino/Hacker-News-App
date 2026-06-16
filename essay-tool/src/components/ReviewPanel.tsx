@@ -71,6 +71,7 @@ const CRITIC_TINT: Record<string, string> = {
   community_fit: "border-l-emerald-400",
   admissions_reader: "border-l-sky-400",
   skeptic: "border-l-rose-400",
+  ai_tells: "border-l-violet-400",
 };
 
 export default function ReviewPanel({
