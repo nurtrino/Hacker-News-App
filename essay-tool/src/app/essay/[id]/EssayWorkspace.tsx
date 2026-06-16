@@ -60,6 +60,9 @@ export default function EssayWorkspace({ initialEssay }: { initialEssay: Essay }
   const [writerNotes, setWriterNotes] = useState("");
   const [proposal, setProposal] = useState<string | null>(null);
 
+  // Which council suggestion is currently being applied ("ALL" while accepting all).
+  const [applyingId, setApplyingId] = useState<string | null>(null);
+
   const id = initialEssay.id;
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -188,6 +191,45 @@ export default function EssayWorkspace({ initialEssay }: { initialEssay: Essay }
 
   function discardProposal() {
     setProposal(null);
+  }
+
+  // Accept or reject one council suggestion; accepting applies it to the draft.
+  async function applySuggestion(suggestionId: string, accept: boolean) {
+    setError("");
+    setApplyingId(suggestionId);
+    await persist({ draft }); // make sure the server draft matches what's shown
+    const res = await fetch(`/api/essays/${id}/apply-suggestion`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ suggestionId, accept }),
+    });
+    const data = await res.json();
+    setApplyingId(null);
+    if (!res.ok) {
+      setError(data.error ?? "Couldn't apply the change.");
+      return;
+    }
+    await refreshRevisions();
+  }
+
+  // Accept every still-pending suggestion, in order.
+  async function acceptAllSuggestions() {
+    const pending = (latest?.critiques ?? [])
+      .flatMap((c) => c.suggestions)
+      .filter((s) => s.status === "PENDING");
+    if (pending.length === 0) return;
+    setError("");
+    setApplyingId("ALL");
+    await persist({ draft });
+    for (const s of pending) {
+      await fetch(`/api/essays/${id}/apply-suggestion`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ suggestionId: s.id, accept: true }),
+      });
+    }
+    setApplyingId(null);
+    await refreshRevisions();
   }
 
   function goToStage(next: Stage) {
@@ -491,6 +533,9 @@ export default function EssayWorkspace({ initialEssay }: { initialEssay: Essay }
             <ReviewPanel
               critiques={latest?.critiques ?? []}
               grammarReports={latest?.grammarReports ?? []}
+              onApply={applySuggestion}
+              onAcceptAll={acceptAllSuggestions}
+              applyingId={applyingId}
             />
           </div>
         </section>

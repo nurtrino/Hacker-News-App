@@ -66,7 +66,29 @@ model Critique {
 
   createdAt  DateTime @default(now())
 
+  suggestions Suggestion[]
+
   @@index([revisionId])
+}
+
+// A concrete edit a council member proposes on the essay. The student accepts
+// or rejects each one; accepting replaces `original` with `replacement` in the
+// working draft.
+model Suggestion {
+  id          String   @id @default(cuid())
+  critiqueId  String
+  critique    Critique @relation(fields: [critiqueId], references: [id], onDelete: Cascade)
+
+  original    String   // verbatim snippet from the essay to replace
+  replacement String   // proposed replacement ("" means delete)
+  reason      String   @default("")
+
+  // PENDING | ACCEPTED | REJECTED | STALE (original text no longer found)
+  status      String   @default("PENDING")
+
+  createdAt   DateTime @default(now())
+
+  @@index([critiqueId])
 }
 
 // Output of the grammar pass (LanguageTool and/or the Claude proofreader).

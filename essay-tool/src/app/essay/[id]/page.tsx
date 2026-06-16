@@ -15,7 +15,10 @@ export default async function EssayPage({
       revisions: {
         orderBy: { round: "desc" },
         include: {
-          critiques: { orderBy: { order: "asc" } },
+          critiques: {
+            orderBy: { order: "asc" },
+            include: { suggestions: { orderBy: { createdAt: "asc" } } },
+          },
           grammarReports: { orderBy: { createdAt: "asc" } },
         },
       },

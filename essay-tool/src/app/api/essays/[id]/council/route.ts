@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { complete } from "@/lib/anthropic";
 import { COUNCIL, getPrompt, buildCouncilUser } from "@/lib/prompts";
 import { getOrCreateCurrentRevision } from "@/lib/revisions";
+import { parseCouncilResponse } from "@/lib/council";
 
 export const maxDuration = 300;
 
@@ -38,34 +39,46 @@ export async function POST(
   try {
     const revision = await getOrCreateCurrentRevision(params.id, draft);
 
+    // Replace any prior critiques on this revision (cascades to suggestions).
+    await prisma.critique.deleteMany({ where: { revisionId: revision.id } });
+
     // Run the critics one at a time, feeding each the earlier members' notes.
-    const results: { critic: (typeof COUNCIL)[number]; content: string }[] = [];
+    // Each member returns a critique plus proposed edits, which we store as
+    // accept/reject suggestions.
     let priorNotes = "";
+    let order = 0;
     for (const critic of COUNCIL) {
-      const content = await complete({
+      const raw = await complete({
         system: critic.system,
         user: buildCouncilUser(promptContext, draft, priorNotes),
         maxTokens: 4000,
       });
-      results.push({ critic, content });
-      priorNotes += `\n\n## ${critic.name}\n${content}`;
-    }
+      const { notes, edits } = parseCouncilResponse(raw);
 
-    // Replace any prior critiques on this revision (supports re-running).
-    await prisma.critique.deleteMany({ where: { revisionId: revision.id } });
-    await prisma.critique.createMany({
-      data: results.map(({ critic, content }, order) => ({
-        revisionId: revision.id,
-        critic: critic.key,
-        criticName: critic.name,
-        content,
-        order,
-      })),
-    });
+      await prisma.critique.create({
+        data: {
+          revisionId: revision.id,
+          critic: critic.key,
+          criticName: critic.name,
+          content: notes,
+          order: order++,
+          suggestions: {
+            create: edits.map((e) => ({
+              original: e.original,
+              replacement: e.replacement,
+              reason: e.reason,
+            })),
+          },
+        },
+      });
+
+      priorNotes += `\n\n## ${critic.name}\n${notes}`;
+    }
 
     const critiques = await prisma.critique.findMany({
       where: { revisionId: revision.id },
       orderBy: { order: "asc" },
+      include: { suggestions: { orderBy: { createdAt: "asc" } } },
     });
 
     return NextResponse.json({ revisionId: revision.id, round: revision.round, critiques });

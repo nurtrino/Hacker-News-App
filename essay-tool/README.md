@@ -13,10 +13,12 @@ You move an essay through three stages:
    - **The Writer** — give it notes ("tighten the opening", "cut the third
      paragraph") and it proposes a revised draft. You see the changes as a diff
      and **Accept** or **Discard** them — nothing is applied until you accept.
-   - **The Council** — send the draft to the three-member Council. Members
+   - **The Council** — send the draft to the four-member Council. Members
      review the *same* draft **in sequence**, and each one sees the earlier
-     members' notes so they build on each other (notes only — they don't rewrite
-     your text).
+     members' notes so they build on each other. Each member gives a critique
+     **and proposes concrete edits** on the essay; you **accept or reject each
+     edit** individually (or "Accept all"), and accepted edits are applied
+     straight into your draft.
    - **Apply the feedback** — have the Writer fold the Council's notes (plus any
      of your own) into a proposed revision, then accept or push back and send it
      to the Council again.

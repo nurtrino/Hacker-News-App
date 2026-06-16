@@ -73,7 +73,22 @@ Structure your critique in markdown with these sections, in order:
 
 **Score** — A single line: "Score: X/10" reflecting how strong this essay is *through your particular lens*.
 
-Be honest and direct — this student wants to get better, not be flattered. Stay in character as your specific role. Do not rewrite the essay for them; coach them to improve it.`;
+Be honest and direct — this student wants to get better, not be flattered. Stay in character as your specific role.
+
+After your critique, propose a set of concrete, surgical edits the student can accept or reject one by one. Output them LAST, as a single fenced code block labeled \`edits\` containing a JSON array:
+
+\`\`\`edits
+[
+  { "original": "<exact text copied verbatim from the essay>", "replacement": "<your proposed text>", "reason": "<one short line on why>" }
+]
+\`\`\`
+
+Rules for edits:
+- "original" MUST be copied character-for-character from the essay so it can be located and replaced. Keep it short — a phrase or a single sentence, never multiple paragraphs.
+- For a pure deletion, use an empty string "" as the "replacement".
+- Propose only high-value changes through your lens — between 0 and 6 of them. Quality over quantity.
+- If you have no concrete edits to propose, output an empty array: \`\`\`edits\\n[]\\n\`\`\`
+- Do not wrap anything else in a code block; the \`edits\` block must be the only fenced block in your response.`;
 
 export const COUNCIL: Critic[] = [
   {
