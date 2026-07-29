@@ -1,5 +1,6 @@
 package com.nurtrino.hackernews.ui
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -40,6 +41,7 @@ import com.nurtrino.hackernews.text.HnHtml
  * One story in a list. Shared by the feeds, search results and saved items so
  * they all read the same way.
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun StoryRow(
     item: Item,
