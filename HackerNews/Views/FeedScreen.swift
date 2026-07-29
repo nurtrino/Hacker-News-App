@@ -87,7 +87,10 @@ struct FeedList: View {
                 list
             }
         }
-        .task { store.loadIfNeeded() }
+        // Keyed on the feed: switching feeds swaps in a different store but
+        // leaves this view's identity alone, so an unkeyed .task would never
+        // fire again and the new feed would sit empty.
+        .task(id: store.feed) { store.loadIfNeeded() }
         .refreshable { await store.refresh() }
     }
 
