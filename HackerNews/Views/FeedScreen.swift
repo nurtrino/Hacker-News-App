@@ -87,7 +87,7 @@ struct FeedList: View {
                 list
             }
         }
-        .task { await store.loadIfNeeded() }
+        .task { store.loadIfNeeded() }
         .refreshable { await store.refresh() }
     }
 

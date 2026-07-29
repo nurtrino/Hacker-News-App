@@ -85,7 +85,7 @@ struct UserScreen: View {
                 }
             }
         }
-        .task(id: username) { await model.load(username: username) }
+        .task(id: username) { model.load(username: username) }
         .onChange(of: model.scope) { _ in model.loadSubmissions(username: username) }
     }
 

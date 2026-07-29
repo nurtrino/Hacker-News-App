@@ -72,7 +72,7 @@ struct StoryScreen: View {
         .navigationTitle(store.nodes.isEmpty ? "Discussion" : store.totalComments.pluralized("comment"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar { toolbarContent }
-        .task { await store.loadIfNeeded(autoCollapseDeep: settings.autoCollapseDeepThreads) }
+        .task { store.loadIfNeeded(autoCollapseDeep: settings.autoCollapseDeepThreads) }
         .refreshable { await store.refresh(autoCollapseDeep: settings.autoCollapseDeepThreads) }
         .onChange(of: store.story) { updated in
             library.refreshSaved(with: updated)
