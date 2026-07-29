@@ -70,47 +70,47 @@ class Settings(context: Context) {
     var autoCollapseDeepThreads by mutableStateOf(prefs.getBoolean("autoCollapse", false))
         private set
 
-    fun setAppearance(value: AppearanceMode) {
+    fun updateAppearance(value: AppearanceMode) {
         appearance = value
         prefs.edit().putString("appearance", value.name).apply()
     }
 
-    fun setTextScale(value: TextScale) {
+    fun updateTextScale(value: TextScale) {
         textScale = value
         prefs.edit().putString("textScale", value.name).apply()
     }
 
-    fun setLinkTarget(value: LinkTarget) {
+    fun updateLinkTarget(value: LinkTarget) {
         linkTarget = value
         prefs.edit().putString("linkTarget", value.name).apply()
     }
 
-    fun setStoryTap(value: StoryTapAction) {
+    fun updateStoryTap(value: StoryTapAction) {
         storyTap = value
         prefs.edit().putString("storyTap", value.name).apply()
     }
 
-    fun setDefaultFeed(value: Feed) {
+    fun updateDefaultFeed(value: Feed) {
         defaultFeed = value
         prefs.edit().putString("defaultFeed", value.name).apply()
     }
 
-    fun setMarkStoriesRead(value: Boolean) {
+    fun updateMarkStoriesRead(value: Boolean) {
         markStoriesRead = value
         prefs.edit().putBoolean("markStoriesRead", value).apply()
     }
 
-    fun setDimReadStories(value: Boolean) {
+    fun updateDimReadStories(value: Boolean) {
         dimReadStories = value
         prefs.edit().putBoolean("dimReadStories", value).apply()
     }
 
-    fun setShowSourceBadges(value: Boolean) {
+    fun updateShowSourceBadges(value: Boolean) {
         showSourceBadges = value
         prefs.edit().putBoolean("showSourceBadges", value).apply()
     }
 
-    fun setAutoCollapseDeepThreads(value: Boolean) {
+    fun updateAutoCollapseDeepThreads(value: Boolean) {
         autoCollapseDeepThreads = value
         prefs.edit().putBoolean("autoCollapse", value).apply()
     }

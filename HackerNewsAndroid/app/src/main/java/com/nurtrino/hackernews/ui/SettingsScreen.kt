@@ -48,39 +48,39 @@ fun SettingsScreen(settings: Settings, library: Library) {
         ) {
             SectionHeader("Appearance")
             ChoiceRow("Theme", settings.appearance.title, AppearanceMode.entries.map { it.title }) {
-                settings.setAppearance(AppearanceMode.entries[it])
+                settings.updateAppearance(AppearanceMode.entries[it])
             }
             ChoiceRow("Text Size", settings.textScale.title, TextScale.entries.map { it.title }) {
-                settings.setTextScale(TextScale.entries[it])
+                settings.updateTextScale(TextScale.entries[it])
             }
             SwitchRow("Source Badges", settings.showSourceBadges) {
-                settings.setShowSourceBadges(it)
+                settings.updateShowSourceBadges(it)
             }
 
             SectionHeader("Reading")
             ChoiceRow("Default Feed", settings.defaultFeed.title, Feed.entries.map { it.title }) {
-                settings.setDefaultFeed(Feed.entries[it])
+                settings.updateDefaultFeed(Feed.entries[it])
             }
             ChoiceRow(
                 "Tapping a Story",
                 settings.storyTap.title,
                 StoryTapAction.entries.map { it.title },
-            ) { settings.setStoryTap(StoryTapAction.entries[it]) }
+            ) { settings.updateStoryTap(StoryTapAction.entries[it]) }
             SwitchRow("Mark Stories as Read", settings.markStoriesRead) {
-                settings.setMarkStoriesRead(it)
+                settings.updateMarkStoriesRead(it)
             }
             SwitchRow("Dim Read Stories", settings.dimReadStories) {
-                settings.setDimReadStories(it)
+                settings.updateDimReadStories(it)
             }
 
             SectionHeader("Links")
             ChoiceRow("Open Links In", settings.linkTarget.title, LinkTarget.entries.map { it.title }) {
-                settings.setLinkTarget(LinkTarget.entries[it])
+                settings.updateLinkTarget(LinkTarget.entries[it])
             }
 
             SectionHeader("Discussions")
             SwitchRow("Auto-Collapse Deep Replies", settings.autoCollapseDeepThreads) {
-                settings.setAutoCollapseDeepThreads(it)
+                settings.updateAutoCollapseDeepThreads(it)
             }
 
             SectionHeader("Storage")

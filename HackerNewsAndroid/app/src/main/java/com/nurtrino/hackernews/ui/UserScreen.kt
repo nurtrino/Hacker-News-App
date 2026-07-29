@@ -119,7 +119,7 @@ fun UserScreen(
                     listOf(SearchScope.STORIES, SearchScope.COMMENTS).forEach { scope ->
                         FilterChip(
                             selected = model.scope == scope,
-                            onClick = { model.setScope(scope) },
+                            onClick = { model.updateScope(scope) },
                             label = { Text(scope.title) },
                         )
                     }

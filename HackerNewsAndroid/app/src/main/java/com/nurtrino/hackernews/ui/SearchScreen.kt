@@ -86,7 +86,7 @@ fun SearchScreen(
                 val scope = SearchScope.entries[index]
                 FilterChip(
                     selected = model.scope == scope,
-                    onClick = { model.setScope(scope) },
+                    onClick = { model.updateScope(scope) },
                     label = { Text(scope.title) },
                 )
             }
@@ -101,7 +101,7 @@ fun SearchScreen(
                 SearchSort.entries.forEach { option ->
                     DropdownMenuItem(
                         text = { Text(option.title) },
-                        onClick = { sortMenu = false; model.setSort(option) },
+                        onClick = { sortMenu = false; model.updateSort(option) },
                     )
                 }
             }
@@ -118,7 +118,7 @@ fun SearchScreen(
                 SearchPeriod.entries.forEach { option ->
                     DropdownMenuItem(
                         text = { Text(option.title) },
-                        onClick = { periodMenu = false; model.setPeriod(option) },
+                        onClick = { periodMenu = false; model.updatePeriod(option) },
                     )
                 }
             }

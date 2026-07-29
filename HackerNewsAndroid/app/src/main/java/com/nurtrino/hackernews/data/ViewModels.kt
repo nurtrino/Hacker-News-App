@@ -279,9 +279,9 @@ class SearchViewModel : ViewModel() {
     val canLoadMore: Boolean get() = page + 1 < totalPages
     val trimmedQuery: String get() = query.trim()
 
-    fun setScope(value: SearchScope) { scope = value; rerun() }
-    fun setSort(value: SearchSort) { sort = value; rerun() }
-    fun setPeriod(value: SearchPeriod) { period = value; rerun() }
+    fun updateScope(value: SearchScope) { scope = value; rerun() }
+    fun updateSort(value: SearchSort) { sort = value; rerun() }
+    fun updatePeriod(value: SearchPeriod) { period = value; rerun() }
 
     /** Called on every keystroke; waits for a pause before hitting the network. */
     fun onQueryChanged(value: String) {
@@ -397,7 +397,7 @@ class UserViewModel(private val username: String) : ViewModel() {
         loadIfNeeded()
     }
 
-    fun setScope(value: SearchScope) {
+    fun updateScope(value: SearchScope) {
         if (value == scope) return
         scope = value
         viewModelScope.launch { fetchSubmissions() }
