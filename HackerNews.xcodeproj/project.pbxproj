@@ -1,0 +1,468 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1B0000000000000000000111 /* HackerNewsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000110 /* HackerNewsApp.swift */; };
+		1B0000000000000000000113 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000112 /* Item.swift */; };
+		1B0000000000000000000115 /* Feed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000114 /* Feed.swift */; };
+		1B0000000000000000000117 /* HNUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000116 /* HNUser.swift */; };
+		1B0000000000000000000119 /* CommentNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000118 /* CommentNode.swift */; };
+		1B000000000000000000011B /* HNAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B000000000000000000011A /* HNAPI.swift */; };
+		1B000000000000000000011D /* AlgoliaAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B000000000000000000011C /* AlgoliaAPI.swift */; };
+		1B000000000000000000011F /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B000000000000000000011E /* AppSettings.swift */; };
+		1B0000000000000000000121 /* LibraryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000120 /* LibraryStore.swift */; };
+		1B0000000000000000000123 /* FeedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000122 /* FeedStore.swift */; };
+		1B0000000000000000000125 /* ThreadStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000124 /* ThreadStore.swift */; };
+		1B0000000000000000000127 /* SearchStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000126 /* SearchStore.swift */; };
+		1B0000000000000000000129 /* HNHTML.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000128 /* HNHTML.swift */; };
+		1B000000000000000000012B /* Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B000000000000000000012A /* Formatting.swift */; };
+		1B000000000000000000012D /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B000000000000000000012C /* Theme.swift */; };
+		1B000000000000000000012F /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B000000000000000000012E /* Haptics.swift */; };
+		1B0000000000000000000131 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000130 /* RootView.swift */; };
+		1B0000000000000000000133 /* FeedScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000132 /* FeedScreen.swift */; };
+		1B0000000000000000000135 /* StoryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000134 /* StoryScreen.swift */; };
+		1B0000000000000000000137 /* CommentRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000136 /* CommentRow.swift */; };
+		1B0000000000000000000139 /* StoryRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000138 /* StoryRow.swift */; };
+		1B000000000000000000013B /* SearchScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B000000000000000000013A /* SearchScreen.swift */; };
+		1B000000000000000000013D /* SavedScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B000000000000000000013C /* SavedScreen.swift */; };
+		1B000000000000000000013F /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B000000000000000000013E /* SettingsScreen.swift */; };
+		1B0000000000000000000141 /* UserScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000140 /* UserScreen.swift */; };
+		1B0000000000000000000143 /* RichText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000142 /* RichText.swift */; };
+		1B0000000000000000000145 /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000144 /* SafariView.swift */; };
+		1B0000000000000000000147 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000146 /* Components.swift */; };
+		1B000000000000000000014E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1B000000000000000000014D /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1B0000000000000000000106 /* HackerNews.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HackerNews.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1B0000000000000000000110 /* HackerNewsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HackerNewsApp.swift; sourceTree = "<group>"; };
+		1B0000000000000000000112 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		1B0000000000000000000114 /* Feed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feed.swift; sourceTree = "<group>"; };
+		1B0000000000000000000116 /* HNUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HNUser.swift; sourceTree = "<group>"; };
+		1B0000000000000000000118 /* CommentNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentNode.swift; sourceTree = "<group>"; };
+		1B000000000000000000011A /* HNAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HNAPI.swift; sourceTree = "<group>"; };
+		1B000000000000000000011C /* AlgoliaAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlgoliaAPI.swift; sourceTree = "<group>"; };
+		1B000000000000000000011E /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		1B0000000000000000000120 /* LibraryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryStore.swift; sourceTree = "<group>"; };
+		1B0000000000000000000122 /* FeedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedStore.swift; sourceTree = "<group>"; };
+		1B0000000000000000000124 /* ThreadStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadStore.swift; sourceTree = "<group>"; };
+		1B0000000000000000000126 /* SearchStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchStore.swift; sourceTree = "<group>"; };
+		1B0000000000000000000128 /* HNHTML.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HNHTML.swift; sourceTree = "<group>"; };
+		1B000000000000000000012A /* Formatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatting.swift; sourceTree = "<group>"; };
+		1B000000000000000000012C /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		1B000000000000000000012E /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
+		1B0000000000000000000130 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		1B0000000000000000000132 /* FeedScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedScreen.swift; sourceTree = "<group>"; };
+		1B0000000000000000000134 /* StoryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryScreen.swift; sourceTree = "<group>"; };
+		1B0000000000000000000136 /* CommentRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentRow.swift; sourceTree = "<group>"; };
+		1B0000000000000000000138 /* StoryRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoryRow.swift; sourceTree = "<group>"; };
+		1B000000000000000000013A /* SearchScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchScreen.swift; sourceTree = "<group>"; };
+		1B000000000000000000013C /* SavedScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedScreen.swift; sourceTree = "<group>"; };
+		1B000000000000000000013E /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
+		1B0000000000000000000140 /* UserScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserScreen.swift; sourceTree = "<group>"; };
+		1B0000000000000000000142 /* RichText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RichText.swift; sourceTree = "<group>"; };
+		1B0000000000000000000144 /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
+		1B0000000000000000000146 /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
+		1B000000000000000000014D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1B000000000000000000014F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1B000000000000000000010E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		1B0000000000000000000102 = {
+			isa = PBXGroup;
+			children = (
+				1B0000000000000000000104 /* HackerNews */,
+				1B0000000000000000000103 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		1B0000000000000000000103 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1B0000000000000000000106 /* HackerNews.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1B0000000000000000000104 /* HackerNews */ = {
+			isa = PBXGroup;
+			children = (
+				1B0000000000000000000110 /* HackerNewsApp.swift */,
+				1B0000000000000000000148 /* Models */,
+				1B0000000000000000000149 /* Networking */,
+				1B000000000000000000014A /* Stores */,
+				1B000000000000000000014B /* Support */,
+				1B000000000000000000014C /* Views */,
+				1B000000000000000000014D /* Assets.xcassets */,
+				1B000000000000000000014F /* Info.plist */,
+			);
+			path = HackerNews;
+			sourceTree = "<group>";
+		};
+		1B0000000000000000000148 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1B0000000000000000000112 /* Item.swift */,
+				1B0000000000000000000114 /* Feed.swift */,
+				1B0000000000000000000116 /* HNUser.swift */,
+				1B0000000000000000000118 /* CommentNode.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		1B0000000000000000000149 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				1B000000000000000000011A /* HNAPI.swift */,
+				1B000000000000000000011C /* AlgoliaAPI.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
+		1B000000000000000000014A /* Stores */ = {
+			isa = PBXGroup;
+			children = (
+				1B000000000000000000011E /* AppSettings.swift */,
+				1B0000000000000000000120 /* LibraryStore.swift */,
+				1B0000000000000000000122 /* FeedStore.swift */,
+				1B0000000000000000000124 /* ThreadStore.swift */,
+				1B0000000000000000000126 /* SearchStore.swift */,
+			);
+			path = Stores;
+			sourceTree = "<group>";
+		};
+		1B000000000000000000014B /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				1B0000000000000000000128 /* HNHTML.swift */,
+				1B000000000000000000012A /* Formatting.swift */,
+				1B000000000000000000012C /* Theme.swift */,
+				1B000000000000000000012E /* Haptics.swift */,
+			);
+			path = Support;
+			sourceTree = "<group>";
+		};
+		1B000000000000000000014C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				1B0000000000000000000130 /* RootView.swift */,
+				1B0000000000000000000132 /* FeedScreen.swift */,
+				1B0000000000000000000134 /* StoryScreen.swift */,
+				1B0000000000000000000136 /* CommentRow.swift */,
+				1B0000000000000000000138 /* StoryRow.swift */,
+				1B000000000000000000013A /* SearchScreen.swift */,
+				1B000000000000000000013C /* SavedScreen.swift */,
+				1B000000000000000000013E /* SettingsScreen.swift */,
+				1B0000000000000000000140 /* UserScreen.swift */,
+				1B0000000000000000000142 /* RichText.swift */,
+				1B0000000000000000000144 /* SafariView.swift */,
+				1B0000000000000000000146 /* Components.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1B0000000000000000000105 /* HackerNews */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1B0000000000000000000108 /* Build configuration list for PBXNativeTarget "HackerNews" */;
+			buildPhases = (
+				1B000000000000000000010D /* Sources */,
+				1B000000000000000000010E /* Frameworks */,
+				1B000000000000000000010F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HackerNews;
+			productName = HackerNews;
+			productReference = 1B0000000000000000000106 /* HackerNews.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1B0000000000000000000101 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					1B0000000000000000000105 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = 1B0000000000000000000107 /* Build configuration list for PBXProject "HackerNews" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1B0000000000000000000102;
+			productRefGroup = 1B0000000000000000000103 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1B0000000000000000000105 /* HackerNews */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1B000000000000000000010F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1B000000000000000000014E /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1B000000000000000000010D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1B0000000000000000000111 /* HackerNewsApp.swift in Sources */,
+				1B0000000000000000000113 /* Item.swift in Sources */,
+				1B0000000000000000000115 /* Feed.swift in Sources */,
+				1B0000000000000000000117 /* HNUser.swift in Sources */,
+				1B0000000000000000000119 /* CommentNode.swift in Sources */,
+				1B000000000000000000011B /* HNAPI.swift in Sources */,
+				1B000000000000000000011D /* AlgoliaAPI.swift in Sources */,
+				1B000000000000000000011F /* AppSettings.swift in Sources */,
+				1B0000000000000000000121 /* LibraryStore.swift in Sources */,
+				1B0000000000000000000123 /* FeedStore.swift in Sources */,
+				1B0000000000000000000125 /* ThreadStore.swift in Sources */,
+				1B0000000000000000000127 /* SearchStore.swift in Sources */,
+				1B0000000000000000000129 /* HNHTML.swift in Sources */,
+				1B000000000000000000012B /* Formatting.swift in Sources */,
+				1B000000000000000000012D /* Theme.swift in Sources */,
+				1B000000000000000000012F /* Haptics.swift in Sources */,
+				1B0000000000000000000131 /* RootView.swift in Sources */,
+				1B0000000000000000000133 /* FeedScreen.swift in Sources */,
+				1B0000000000000000000135 /* StoryScreen.swift in Sources */,
+				1B0000000000000000000137 /* CommentRow.swift in Sources */,
+				1B0000000000000000000139 /* StoryRow.swift in Sources */,
+				1B000000000000000000013B /* SearchScreen.swift in Sources */,
+				1B000000000000000000013D /* SavedScreen.swift in Sources */,
+				1B000000000000000000013F /* SettingsScreen.swift in Sources */,
+				1B0000000000000000000141 /* UserScreen.swift in Sources */,
+				1B0000000000000000000143 /* RichText.swift in Sources */,
+				1B0000000000000000000145 /* SafariView.swift in Sources */,
+				1B0000000000000000000147 /* Components.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1B0000000000000000000109 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		1B000000000000000000010A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		1B000000000000000000010B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = HackerNews/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nurtrino.hackernews;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		1B000000000000000000010C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = HackerNews/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nurtrino.hackernews;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1B0000000000000000000107 /* Build configuration list for PBXProject "HackerNews" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1B0000000000000000000109 /* Debug */,
+				1B000000000000000000010A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1B0000000000000000000108 /* Build configuration list for PBXNativeTarget "HackerNews" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1B000000000000000000010B /* Debug */,
+				1B000000000000000000010C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1B0000000000000000000101 /* Project object */;
+}
