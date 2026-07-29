@@ -66,8 +66,18 @@ enum HNHTML {
                 continue
             }
 
+            // Only a letter or '/' can start a real tag. Anything else is a
+            // literal '<' in the prose ("a < b"), and treating it as a tag
+            // would swallow everything up to the next '>'.
+            let next = html.index(after: index)
+            guard next < html.endIndex, html[next].isLetter || html[next] == "/" else {
+                if inPre { codeBuffer.append(character) } else { pending.append(character) }
+                index = next
+                continue
+            }
+
             guard let close = html[index...].firstIndex(of: ">") else {
-                // Stray '<' with no closing bracket: treat the rest as text.
+                // Unterminated tag: treat the rest as text.
                 pending.append(contentsOf: html[index...])
                 break
             }
@@ -129,8 +139,11 @@ enum HNHTML {
 
         while index < html.endIndex {
             let character = html[index]
-            if character == "<", let close = html[index...].firstIndex(of: ">") {
-                let tag = Tag(html[html.index(after: index)..<close])
+            let next = html.index(after: index)
+            if character == "<", next < html.endIndex,
+               html[next].isLetter || html[next] == "/",
+               let close = html[index...].firstIndex(of: ">") {
+                let tag = Tag(html[next..<close])
                 if tag.name == "p" || tag.name == "br" { output.append("\n") }
                 index = html.index(after: close)
                 continue

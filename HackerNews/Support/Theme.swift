@@ -1,8 +1,8 @@
 import SwiftUI
 
 extension Color {
-    /// Y Combinator orange, #FF6600.
-    static let hnOrange = Color(red: 1.0, green: 0.4, blue: 0.0)
+    /// The app icon's orange, #FC5403.
+    static let hnOrange = Color(red: 252.0 / 255.0, green: 84.0 / 255.0, blue: 3.0 / 255.0)
 
     /// Palette used for thread depth bars and source monograms. Chosen to stay
     /// legible against both the light and dark system backgrounds.

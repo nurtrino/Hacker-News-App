@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Sampled from the source app icon. -->
+    <color name="hn_orange">#FC5403</color>
+    <color name="ic_launcher_background">#FC5403</color>
+</resources>
