@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Compose draws everything; this only needs to keep the system bars and
-         the pre-Compose window background from flashing the wrong colour. -->
-    <style name="Theme.HackerNews" parent="android:Theme.Material.DayNight.NoActionBar">
+    <!-- Compose draws everything; this theme only has to keep the launch
+         window from flashing the wrong colour before the first frame.
+         There is no android:Theme.Material.DayNight, so light and dark are
+         two files. -->
+    <style name="Theme.HackerNews" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/white</item>
     </style>
 </resources>
