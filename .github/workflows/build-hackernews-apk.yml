@@ -7,7 +7,7 @@ name: Build HackerNews APK
 on:
   push:
     branches:
-      - claude/hacker-news-ios-app-w4a6jl
+      - hacker-news-app
     paths:
       - 'HackerNewsAndroid/**'
       - '.github/workflows/build-hackernews-apk.yml'
@@ -89,23 +89,25 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-      - name: Publish rolling release
+      - name: Publish into the combined release
         working-directory: ${{ github.workspace }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          TAG="hackernews-android-latest"
-          gh release delete "$TAG" --yes --cleanup-tag || true
-          gh release create "$TAG" HackerNews.apk \
-            --target "$GITHUB_SHA" \
-            --title "Hacker News for Android — latest" \
-            --prerelease \
-            --notes "Android build of \`${GITHUB_SHA:0:7}\`.
+          TAG="latest"
+          gh release view "$TAG" >/dev/null 2>&1 || \
+            gh release create "$TAG" \
+              --target "$GITHUB_SHA" \
+              --title "Hacker News — latest build" \
+              --prerelease \
+              --notes "iOS and Android builds of the Hacker News client.
 
-          Download \`HackerNews.apk\` below and install it. You'll need to allow
-          installs from your browser or file manager the first time.
+          - \`HackerNews-unsigned.ipa\` — unsigned; sign it with your own
+            certificate (Signulous, ESign, Sideloadly, \`codesign\`).
+          - \`HackerNews.apk\` — signed and installable as-is.
 
-          Signed with the CI debug key unless a release keystore is configured,
-          so an update may ask you to uninstall the previous build first."
+          Bundle / application id is \`com.nurtrino.hackernews\`; no entitlements
+          are required." || true
+          gh release upload "$TAG" HackerNews.apk --clobber
           echo "https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/HackerNews.apk"

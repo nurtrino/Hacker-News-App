@@ -8,7 +8,7 @@ name: Build HackerNews IPA (unsigned)
 on:
   push:
     branches:
-      - claude/hacker-news-ios-app-w4a6jl
+      - hacker-news-app
     paths:
       - 'HackerNews/**'
       - 'HackerNews.xcodeproj/**'
@@ -77,21 +77,26 @@ jobs:
       # Artifacts are zipped by GitHub and can't be downloaded from the mobile
       # app at all. A release asset is the bare .ipa at a stable URL, which is
       # what a signing service actually wants.
-      - name: Publish rolling release
+      - name: Publish into the combined release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          TAG="hackernews-latest"
-          gh release delete "$TAG" --yes --cleanup-tag || true
-          gh release create "$TAG" HackerNews-unsigned.ipa \
-            --target "$GITHUB_SHA" \
-            --title "Hacker News (unsigned) — latest" \
-            --prerelease \
-            --notes "Unsigned build of \`${GITHUB_SHA:0:7}\`.
+          TAG="latest"
+          # Both platform workflows publish into one release, so create it
+          # only if the other job hasn't already.
+          gh release view "$TAG" >/dev/null 2>&1 || \
+            gh release create "$TAG" \
+              --target "$GITHUB_SHA" \
+              --title "Hacker News — latest build" \
+              --prerelease \
+              --notes "iOS and Android builds of the Hacker News client.
 
-          Download \`HackerNews-unsigned.ipa\` below and sign it with your own
-          certificate (Signulous, ESign, Sideloadly, \`codesign\`). Bundle id is
-          \`com.nurtrino.hackernews\`; no entitlements are required."
-          echo "Release asset:"
+          - \`HackerNews-unsigned.ipa\` — unsigned; sign it with your own
+            certificate (Signulous, ESign, Sideloadly, \`codesign\`).
+          - \`HackerNews.apk\` — signed and installable as-is.
+
+          Bundle / application id is \`com.nurtrino.hackernews\`; no entitlements
+          are required." || true
+          gh release upload "$TAG" HackerNews-unsigned.ipa --clobber
           echo "https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/HackerNews-unsigned.ipa"

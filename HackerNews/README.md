@@ -91,38 +91,27 @@ HackerNews/
 ## Getting an IPA without a Mac
 
 `.github/workflows/build-hackernews-ipa.yml` builds an **unsigned** `.ipa` on a
-GitHub-hosted macOS runner. It runs on every push to the dev branch, or on
-demand: **Actions** → **Build HackerNews IPA (unsigned)** → **Run workflow**.
+GitHub-hosted macOS runner and publishes it, alongside the Android APK, into a
+single rolling release:
 
-Every green build publishes the `.ipa` two ways:
+<https://github.com/nurtrino/Special-Projects/releases/tag/latest>
 
-**Release asset (easiest — works on a phone):** a bare `.ipa` at a stable URL
-that always points at the newest build.
-
-<https://github.com/nurtrino/Special-Projects/releases/download/hackernews-latest/HackerNews-unsigned.ipa>
-
-**Workflow artifact:** the same file, but GitHub wraps artifacts in an extra
-`.zip` and the GitHub mobile app can't download them at all — so this one needs
-a browser. Open the run, scroll to **Artifacts**, grab
-`HackerNews-unsigned-ipa`, and unzip it.
+Grab `HackerNews-unsigned.ipa` from there — it's a bare `.ipa`, not wrapped in
+a zip, so it downloads cleanly in mobile Safari. The same file is also attached
+to each run as a workflow artifact if you'd rather go through the Actions tab.
 
 No signing secrets are stored in CI — it builds unsigned on purpose, so you can
 sign it yourself.
 
 ### Signing with Signulous
 
-1. Download `HackerNews-unsigned.ipa` from the release link above.
+1. Download `HackerNews-unsigned.ipa` from the release above.
 2. Upload it to Signulous and sign it with your certificate.
 3. Install the signed IPA from the link Signulous gives you.
 
-The bundle identifier ships as `com.nurtrino.hackernews`. If your signing
-service needs a different one (or you want to install alongside another build),
-change `PRODUCT_BUNDLE_IDENTIFIER` in both target configurations in
-`HackerNews.xcodeproj/project.pbxproj` — or let the signing service rewrite it,
-which most of them can.
-
-No entitlements are required. The app has no App Groups, push, iCloud or
-keychain access, so a plain development or ad-hoc certificate is enough.
+The bundle identifier ships as `com.nurtrino.hackernews`. No entitlements are
+required — the app has no App Groups, push, iCloud or keychain access, so a
+plain development or ad-hoc certificate is enough.
 
 ### If you do have a Mac
 
