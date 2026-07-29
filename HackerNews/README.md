@@ -91,19 +91,28 @@ HackerNews/
 ## Getting an IPA without a Mac
 
 `.github/workflows/build-hackernews-ipa.yml` builds an **unsigned** `.ipa` on a
-GitHub-hosted macOS runner and uploads it as a workflow artifact. It runs on
-every push to the dev branch, or on demand: **Actions** → **Build HackerNews
-IPA (unsigned)** → **Run workflow**. Download the `HackerNews-unsigned-ipa`
-artifact, unzip it, and you have `HackerNews-unsigned.ipa`.
+GitHub-hosted macOS runner. It runs on every push to the dev branch, or on
+demand: **Actions** → **Build HackerNews IPA (unsigned)** → **Run workflow**.
+
+Every green build publishes the `.ipa` two ways:
+
+**Release asset (easiest — works on a phone):** a bare `.ipa` at a stable URL
+that always points at the newest build.
+
+<https://github.com/nurtrino/Special-Projects/releases/download/hackernews-latest/HackerNews-unsigned.ipa>
+
+**Workflow artifact:** the same file, but GitHub wraps artifacts in an extra
+`.zip` and the GitHub mobile app can't download them at all — so this one needs
+a browser. Open the run, scroll to **Artifacts**, grab
+`HackerNews-unsigned-ipa`, and unzip it.
 
 No signing secrets are stored in CI — it builds unsigned on purpose, so you can
 sign it yourself.
 
 ### Signing with Signulous
 
-1. Download and unzip the artifact from the Actions run.
-2. Upload `HackerNews-unsigned.ipa` to Signulous and sign it with your
-   certificate.
+1. Download `HackerNews-unsigned.ipa` from the release link above.
+2. Upload it to Signulous and sign it with your certificate.
 3. Install the signed IPA from the link Signulous gives you.
 
 The bundle identifier ships as `com.nurtrino.hackernews`. If your signing

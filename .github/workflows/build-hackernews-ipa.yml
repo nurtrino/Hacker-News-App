@@ -19,6 +19,8 @@ jobs:
   build:
     runs-on: macos-14
     timeout-minutes: 30
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout
@@ -71,3 +73,25 @@ jobs:
           path: HackerNews-unsigned.ipa
           if-no-files-found: error
           retention-days: 30
+
+      # Artifacts are zipped by GitHub and can't be downloaded from the mobile
+      # app at all. A release asset is the bare .ipa at a stable URL, which is
+      # what a signing service actually wants.
+      - name: Publish rolling release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG="hackernews-latest"
+          gh release delete "$TAG" --yes --cleanup-tag || true
+          gh release create "$TAG" HackerNews-unsigned.ipa \
+            --target "$GITHUB_SHA" \
+            --title "Hacker News (unsigned) — latest" \
+            --prerelease \
+            --notes "Unsigned build of \`${GITHUB_SHA:0:7}\`.
+
+          Download \`HackerNews-unsigned.ipa\` below and sign it with your own
+          certificate (Signulous, ESign, Sideloadly, \`codesign\`). Bundle id is
+          \`com.nurtrino.hackernews\`; no entitlements are required."
+          echo "Release asset:"
+          echo "https://github.com/${GITHUB_REPOSITORY}/releases/download/${TAG}/HackerNews-unsigned.ipa"
