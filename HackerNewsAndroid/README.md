@@ -75,7 +75,7 @@ HackerNewsAndroid/
 
 Every green build publishes the APK into the shared release:
 
-<https://github.com/nurtrino/Special-Projects/releases/tag/latest>
+<https://github.com/nurtrino/Hacker-News-App/releases/tag/latest>
 
 Download `HackerNews.apk` and open it. Android will ask you to allow installs
 from whichever app you downloaded it with — that's a one-time per-app setting

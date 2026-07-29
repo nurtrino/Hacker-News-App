@@ -94,7 +94,7 @@ HackerNews/
 GitHub-hosted macOS runner and publishes it, alongside the Android APK, into a
 single rolling release:
 
-<https://github.com/nurtrino/Special-Projects/releases/tag/latest>
+<https://github.com/nurtrino/Hacker-News-App/releases/tag/latest>
 
 Grab `HackerNews-unsigned.ipa` from there — it's a bare `.ipa`, not wrapped in
 a zip, so it downloads cleanly in mobile Safari. The same file is also attached

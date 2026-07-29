@@ -19,7 +19,7 @@ language. Only the UI layer differs.
 
 Every green build publishes both artifacts into one rolling release:
 
-**<https://github.com/nurtrino/Special-Projects/releases/tag/latest>**
+**<https://github.com/nurtrino/Hacker-News-App/releases/tag/latest>**
 
 - `HackerNews.apk` — signed and installable as-is. Allow installs from your
   browser or file manager the first time.
