@@ -36,6 +36,7 @@ export async function POST(
       customPrompt: essay.customPrompt,
       school: essay.school,
       schoolInfo: essay.schoolInfo,
+      wordLimit: essay.wordLimit,
     });
   } else {
     promptId = body.promptId ?? essay.promptId;

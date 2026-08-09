@@ -29,6 +29,7 @@ interface Essay {
   customPrompt: string;
   school: string;
   schoolInfo: string;
+  wordLimit: number | null;
   revisions: Revision[];
 }
 
@@ -56,6 +57,9 @@ export default function EssayWorkspace({ initialEssay }: { initialEssay: Essay }
   const [customPrompt, setCustomPrompt] = useState(initialEssay.customPrompt ?? "");
   const [school, setSchool] = useState(initialEssay.school ?? "");
   const [schoolInfo, setSchoolInfo] = useState(initialEssay.schoolInfo ?? "");
+  const [wordLimit, setWordLimit] = useState<number | null>(
+    initialEssay.wordLimit ?? null
+  );
   const [stage, setStage] = useState<Stage>((initialEssay.stage as Stage) || "OUTLINE");
   const [revisions, setRevisions] = useState<Revision[]>(initialEssay.revisions);
 
@@ -314,6 +318,33 @@ export default function EssayWorkspace({ initialEssay }: { initialEssay: Essay }
             className="mt-2 w-full rounded-lg border border-stone-300 p-3 text-sm outline-none focus:border-accent"
           />
         </div>
+        <div>
+          <label className="block text-sm font-medium text-stone-700">
+            Word limit <span className="font-normal text-stone-400">(optional)</span>
+          </label>
+          <p className="text-sm text-stone-500">
+            The max words the school allows. Drives the counter and tells the AI
+            how long to write. Leave blank for no limit.
+          </p>
+          <div className="mt-2 flex items-center gap-2">
+            <input
+              type="number"
+              min={1}
+              value={wordLimit ?? ""}
+              onChange={(e) => {
+                const raw = e.target.value.trim();
+                const parsed = raw === "" ? null : Math.max(1, Math.round(Number(raw)));
+                const next =
+                  parsed !== null && Number.isFinite(parsed) ? parsed : null;
+                setWordLimit(next);
+                queueSave({ wordLimit: next });
+              }}
+              placeholder="e.g. 250"
+              className="w-32 rounded-lg border border-stone-300 p-3 text-sm outline-none focus:border-accent"
+            />
+            <span className="text-sm text-stone-400">words</span>
+          </div>
+        </div>
       </div>
     );
   }
@@ -492,15 +523,19 @@ export default function EssayWorkspace({ initialEssay }: { initialEssay: Essay }
                 <label className="text-sm font-medium text-stone-700">
                   {stage === "EDIT" ? "Edit your essay" : "Draft"}
                 </label>
-                <span
-                  className={`text-xs ${
-                    !isSupplement && words > 650
-                      ? "font-semibold text-red-600"
-                      : "text-stone-400"
-                  }`}
-                >
-                  {isSupplement ? `${words} words` : `${words} / 650 words`}
-                </span>
+                {(() => {
+                  const limit = isSupplement ? wordLimit : 650;
+                  const over = limit != null && words > limit;
+                  return (
+                    <span
+                      className={`text-xs ${
+                        over ? "font-semibold text-red-600" : "text-stone-400"
+                      }`}
+                    >
+                      {limit != null ? `${words} / ${limit} words` : `${words} words`}
+                    </span>
+                  );
+                })()}
               </div>
               <textarea
                 value={draft}

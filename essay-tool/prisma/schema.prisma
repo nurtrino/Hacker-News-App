@@ -33,6 +33,10 @@ model Essay {
   school       String @default("")
   schoolInfo   String @default("")
 
+  // Optional word limit the student sets (supplements have varying limits).
+  // Drives the word counter and tells the AI how long to write. null = no cap.
+  wordLimit    Int?
+
   // The current working draft (Stage 2 / Stage 3)
   draft     String   @default("")
 

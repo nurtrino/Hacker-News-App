@@ -41,6 +41,7 @@ export async function POST(
       customPrompt: essay.customPrompt,
       school: essay.school,
       schoolInfo: essay.schoolInfo,
+      wordLimit: essay.wordLimit,
     });
   } else {
     system = OUTLINE_SYSTEM;

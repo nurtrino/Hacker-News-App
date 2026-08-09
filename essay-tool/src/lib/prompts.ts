@@ -60,6 +60,7 @@ export interface SupplementInfo {
   customPrompt: string;
   school: string;
   schoolInfo: string;
+  wordLimit?: number | null;
 }
 
 // A human-readable block describing the school, folded into the AI's context so
@@ -82,7 +83,11 @@ export function buildSupplementContext(info: SupplementInfo): string {
   const prompt = info.customPrompt.trim()
     ? `This is a supplemental essay answering the following prompt (set by the school):\n"${info.customPrompt.trim()}"\n\n`
     : "This is a supplemental essay for a specific college.\n\n";
-  return `${prompt}${school}`;
+  const limit =
+    info.wordLimit && info.wordLimit > 0
+      ? `The essay must be no more than ${info.wordLimit} words. Treat this as a hard limit — do not exceed it.\n\n`
+      : "";
+  return `${prompt}${limit}${school}`;
 }
 
 // --- The Council ---------------------------------------------------------

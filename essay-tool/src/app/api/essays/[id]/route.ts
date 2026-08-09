@@ -43,6 +43,7 @@ export async function PATCH(
     customPrompt?: string;
     school?: string;
     schoolInfo?: string;
+    wordLimit?: number | null;
   };
 
   const data: Record<string, unknown> = {};
@@ -57,6 +58,11 @@ export async function PATCH(
   if (typeof body.customPrompt === "string") data.customPrompt = body.customPrompt;
   if (typeof body.school === "string") data.school = body.school;
   if (typeof body.schoolInfo === "string") data.schoolInfo = body.schoolInfo;
+  if (body.wordLimit === null) {
+    data.wordLimit = null;
+  } else if (typeof body.wordLimit === "number" && Number.isFinite(body.wordLimit)) {
+    data.wordLimit = body.wordLimit > 0 ? Math.round(body.wordLimit) : null;
+  }
 
   const essay = await prisma.essay.update({
     where: { id: params.id },
