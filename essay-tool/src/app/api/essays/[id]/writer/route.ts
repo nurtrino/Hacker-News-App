@@ -62,6 +62,7 @@ export async function POST(
     }
   }
 
+  const isSupplement = essay.type === "SUPPLEMENTAL";
   const prompt = getPrompt(essay.promptId);
 
   try {
@@ -72,6 +73,13 @@ export async function POST(
         draft,
         councilNotes,
         studentNotes: body.notes,
+        supplement: isSupplement
+          ? {
+              customPrompt: essay.customPrompt,
+              school: essay.school,
+              schoolInfo: essay.schoolInfo,
+            }
+          : undefined,
       }),
       maxTokens: 4000,
     });

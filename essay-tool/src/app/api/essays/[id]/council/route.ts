@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { complete } from "@/lib/anthropic";
-import { COUNCIL, getPrompt, buildCouncilUser } from "@/lib/prompts";
+import {
+  COUNCIL,
+  getPrompt,
+  buildCouncilUser,
+  buildSupplementContext,
+} from "@/lib/prompts";
 import { getOrCreateCurrentRevision } from "@/lib/revisions";
 import { parseCouncilResponse } from "@/lib/council";
 
@@ -31,10 +36,19 @@ export async function POST(
     await prisma.essay.update({ where: { id: params.id }, data: { draft } });
   }
 
-  const prompt = getPrompt(essay.promptId);
-  const promptContext = prompt
-    ? `The essay is responding to this Common App prompt:\n"${prompt.text}"\n\n`
-    : "";
+  const promptContext =
+    essay.type === "SUPPLEMENTAL"
+      ? buildSupplementContext({
+          customPrompt: essay.customPrompt,
+          school: essay.school,
+          schoolInfo: essay.schoolInfo,
+        })
+      : (() => {
+          const prompt = getPrompt(essay.promptId);
+          return prompt
+            ? `The essay is responding to this Common App prompt:\n"${prompt.text}"\n\n`
+            : "";
+        })();
 
   try {
     const revision = await getOrCreateCurrentRevision(params.id, draft);

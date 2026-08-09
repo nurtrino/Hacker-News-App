@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { complete } from "@/lib/anthropic";
-import { OUTLINE_SYSTEM, getPrompt } from "@/lib/prompts";
+import {
+  OUTLINE_SYSTEM,
+  SUPPLEMENT_OUTLINE_SYSTEM,
+  getPrompt,
+  buildSupplementContext,
+} from "@/lib/prompts";
 
 export const maxDuration = 300;
 
@@ -26,15 +31,29 @@ export async function POST(
     );
   }
 
-  const prompt = getPrompt(body.promptId ?? essay.promptId);
-  const promptLine = prompt
-    ? `The student is leaning toward this Common App prompt:\n"${prompt.text}"\n\n`
-    : "";
+  const isSupplement = essay.type === "SUPPLEMENTAL";
+
+  let system: string;
+  let contextLine: string;
+  if (isSupplement) {
+    system = SUPPLEMENT_OUTLINE_SYSTEM;
+    contextLine = buildSupplementContext({
+      customPrompt: essay.customPrompt,
+      school: essay.school,
+      schoolInfo: essay.schoolInfo,
+    });
+  } else {
+    system = OUTLINE_SYSTEM;
+    const prompt = getPrompt(body.promptId ?? essay.promptId);
+    contextLine = prompt
+      ? `The student is leaning toward this Common App prompt:\n"${prompt.text}"\n\n`
+      : "";
+  }
 
   try {
     const outline = await complete({
-      system: OUTLINE_SYSTEM,
-      user: `${promptLine}Here is what the student wants to write about:\n\n${topic}\n\nBuild them a strong outline.`,
+      system,
+      user: `${contextLine}Here is what the student wants to write about:\n\n${topic}\n\nBuild them a strong outline.`,
       maxTokens: 3000,
     });
 

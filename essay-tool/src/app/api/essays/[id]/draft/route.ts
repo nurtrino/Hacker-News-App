@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { complete } from "@/lib/anthropic";
-import { buildDraftSystem, getPrompt } from "@/lib/prompts";
+import {
+  buildDraftSystem,
+  buildSupplementDraftSystem,
+  getPrompt,
+} from "@/lib/prompts";
 
 export const maxDuration = 300;
 
@@ -17,13 +21,32 @@ export async function POST(
   const essay = await prisma.essay.findUnique({ where: { id: params.id } });
   if (!essay) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  const promptId = body.promptId ?? essay.promptId;
-  const prompt = getPrompt(promptId);
-  if (!prompt) {
-    return NextResponse.json(
-      { error: "Choose a Common App prompt before generating the draft." },
-      { status: 400 }
-    );
+  const isSupplement = essay.type === "SUPPLEMENTAL";
+
+  let system: string;
+  let promptId = essay.promptId;
+  if (isSupplement) {
+    if (!essay.customPrompt.trim()) {
+      return NextResponse.json(
+        { error: "Add the supplemental essay's prompt before generating the draft." },
+        { status: 400 }
+      );
+    }
+    system = buildSupplementDraftSystem({
+      customPrompt: essay.customPrompt,
+      school: essay.school,
+      schoolInfo: essay.schoolInfo,
+    });
+  } else {
+    promptId = body.promptId ?? essay.promptId;
+    const prompt = getPrompt(promptId);
+    if (!prompt) {
+      return NextResponse.json(
+        { error: "Choose a Common App prompt before generating the draft." },
+        { status: 400 }
+      );
+    }
+    system = buildDraftSystem(prompt.text);
   }
 
   if (!essay.outline.trim()) {
@@ -35,7 +58,7 @@ export async function POST(
 
   try {
     const draft = await complete({
-      system: buildDraftSystem(prompt.text),
+      system,
       user: `Here is the student's outline. Turn it into the full essay:\n\n${essay.outline}`,
       maxTokens: 4000,
     });

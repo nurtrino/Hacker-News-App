@@ -40,16 +40,23 @@ export async function PATCH(
     draft?: string;
     stage?: string;
     promptId?: string | null;
+    customPrompt?: string;
+    school?: string;
+    schoolInfo?: string;
   };
 
   const data: Record<string, unknown> = {};
-  if (typeof body.title === "string") data.title = body.title.trim() || "Untitled Personal Statement";
+  if (typeof body.title === "string")
+    data.title = body.title.trim() || "Untitled Essay";
   if (typeof body.topic === "string") data.topic = body.topic;
   if (typeof body.outline === "string") data.outline = body.outline;
   if (typeof body.draft === "string") data.draft = body.draft;
   if (typeof body.stage === "string") data.stage = body.stage;
   if (body.promptId === null || typeof body.promptId === "string")
     data.promptId = body.promptId;
+  if (typeof body.customPrompt === "string") data.customPrompt = body.customPrompt;
+  if (typeof body.school === "string") data.school = body.school;
+  if (typeof body.schoolInfo === "string") data.schoolInfo = body.schoolInfo;
 
   const essay = await prisma.essay.update({
     where: { id: params.id },

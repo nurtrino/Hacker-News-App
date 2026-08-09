@@ -1,15 +1,28 @@
 # Essay Tool
 
 A personal web app for iterating on your college application essays with an AI
-**Council**. It starts with the **Personal Statement** (the Common App essay).
+**Council**. It handles two kinds of essay, each with its own section on the
+home page:
+
+- **Personal Statements** — the Common App essay. You pick the prompt from the
+  Common App list (650-word limit).
+- **Supplemental Essays** — the school-specific essays. You supply the prompt
+  yourself, write (or generate) your own outline, and give the school — its name
+  and, optionally, a link or notes about it — so "Why us?"-style essays can
+  reference real specifics. There's no fixed word limit (supplements vary).
+
+Both kinds share the exact same workflow, Council, Writer, grammar pass, and
+saving — they differ only in where the prompt and school context come from.
 
 You move an essay through three stages:
 
 1. **Outline** — Write your own outline, or give the AI a topic and let it build
-   one. Edit it freely.
-2. **Draft & Council** — Pick the Common App prompt your essay answers, and the
-   top Claude writing model (Opus 4.8) writes a full draft from your outline.
-   From here you work the revision loop:
+   one. Edit it freely. (Supplements: fill in the school and the school's prompt
+   here first.)
+2. **Draft & Council** — Choose the prompt your essay answers (a Common App
+   prompt for a personal statement, or your own pasted-in prompt for a
+   supplement), and the top Claude writing model (Opus 4.8) writes a full draft
+   from your outline. From here you work the revision loop:
    - **The Writer** — give it notes ("tighten the opening", "cut the third
      paragraph") and it proposes a revised draft. You see the changes as a diff
      and **Accept** or **Discard** them — nothing is applied until you accept.

@@ -20,11 +20,15 @@ interface Revision {
 interface Essay {
   id: string;
   title: string;
+  type: string;
   topic: string;
   outline: string;
   draft: string;
   stage: string;
   promptId: string | null;
+  customPrompt: string;
+  school: string;
+  schoolInfo: string;
   revisions: Revision[];
 }
 
@@ -42,11 +46,16 @@ function wordCount(text: string): number {
 }
 
 export default function EssayWorkspace({ initialEssay }: { initialEssay: Essay }) {
+  const isSupplement = initialEssay.type === "SUPPLEMENTAL";
+
   const [title, setTitle] = useState(initialEssay.title);
   const [topic, setTopic] = useState(initialEssay.topic);
   const [outline, setOutline] = useState(initialEssay.outline);
   const [draft, setDraft] = useState(initialEssay.draft);
   const [promptId, setPromptId] = useState<string | null>(initialEssay.promptId);
+  const [customPrompt, setCustomPrompt] = useState(initialEssay.customPrompt ?? "");
+  const [school, setSchool] = useState(initialEssay.school ?? "");
+  const [schoolInfo, setSchoolInfo] = useState(initialEssay.schoolInfo ?? "");
   const [stage, setStage] = useState<Stage>((initialEssay.stage as Stage) || "OUTLINE");
   const [revisions, setRevisions] = useState<Revision[]>(initialEssay.revisions);
 
@@ -119,13 +128,22 @@ export default function EssayWorkspace({ initialEssay }: { initialEssay: Essay }
   }
 
   async function generateDraft() {
-    if (!promptId) {
+    if (isSupplement) {
+      if (!customPrompt.trim()) {
+        setError("Add the supplemental essay's prompt first.");
+        return;
+      }
+    } else if (!promptId) {
       setError("Choose a Common App prompt first.");
       return;
     }
     setError("");
     setBusy("draft");
-    await persist({ outline, promptId });
+    await persist(
+      isSupplement
+        ? { outline, customPrompt, school, schoolInfo }
+        : { outline, promptId }
+    );
     const res = await fetch(`/api/essays/${id}/draft`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -239,6 +257,67 @@ export default function EssayWorkspace({ initialEssay }: { initialEssay: Essay }
 
   const words = useMemo(() => wordCount(draft), [draft]);
 
+  const titlePlaceholder = isSupplement
+    ? "Untitled Supplemental Essay"
+    : "Untitled Personal Statement";
+
+  // The school + prompt inputs that a supplemental essay needs the student to
+  // fill in. Shown in Stage 1, and again (editable) in the Stage 2 draft box.
+  function renderSupplementFields() {
+    return (
+      <div className="space-y-4">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label className="block text-sm font-medium text-stone-700">
+              School
+            </label>
+            <input
+              value={school}
+              onChange={(e) => {
+                setSchool(e.target.value);
+                queueSave({ school: e.target.value });
+              }}
+              placeholder="e.g. Stanford University"
+              className="mt-2 w-full rounded-lg border border-stone-300 p-3 text-sm outline-none focus:border-accent"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-stone-700">
+              School info <span className="font-normal text-stone-400">(optional)</span>
+            </label>
+            <input
+              value={schoolInfo}
+              onChange={(e) => {
+                setSchoolInfo(e.target.value);
+                queueSave({ schoolInfo: e.target.value });
+              }}
+              placeholder="A link, or notes about the school"
+              className="mt-2 w-full rounded-lg border border-stone-300 p-3 text-sm outline-none focus:border-accent"
+            />
+          </div>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-stone-700">
+            Essay prompt
+          </label>
+          <p className="text-sm text-stone-500">
+            Paste the school&apos;s supplemental prompt exactly as it&apos;s written.
+          </p>
+          <textarea
+            value={customPrompt}
+            onChange={(e) => {
+              setCustomPrompt(e.target.value);
+              queueSave({ customPrompt: e.target.value });
+            }}
+            rows={3}
+            placeholder="e.g. What is it about Stanford that excites you? (250 words)"
+            className="mt-2 w-full rounded-lg border border-stone-300 p-3 text-sm outline-none focus:border-accent"
+          />
+        </div>
+      </div>
+    );
+  }
+
   // --- render --------------------------------------------------------------
 
   return (
@@ -260,7 +339,7 @@ export default function EssayWorkspace({ initialEssay }: { initialEssay: Essay }
           queueSave({ title: e.target.value });
         }}
         className="mt-3 w-full bg-transparent font-serif text-3xl font-bold outline-none"
-        placeholder="Untitled Personal Statement"
+        placeholder={titlePlaceholder}
       />
 
       {/* Stage stepper */}
@@ -289,6 +368,12 @@ export default function EssayWorkspace({ initialEssay }: { initialEssay: Essay }
       {/* STAGE 1: OUTLINE */}
       {stage === "OUTLINE" && (
         <section className="mt-6 space-y-6">
+          {isSupplement && (
+            <div className="rounded-xl border border-stone-200 bg-white p-4">
+              {renderSupplementFields()}
+            </div>
+          )}
+
           <div>
             <label className="block text-sm font-medium text-stone-700">
               What do you want to write about?
@@ -349,39 +434,48 @@ export default function EssayWorkspace({ initialEssay }: { initialEssay: Essay }
           <div className="space-y-5">
             {stage === "DRAFT" && (
               <div className="rounded-xl border border-stone-200 bg-white p-4">
-                <label className="block text-sm font-medium text-stone-700">
-                  Which prompt is this essay answering?
-                </label>
-                <div className="mt-3 space-y-2">
-                  {COMMON_APP_PROMPTS.map((p) => (
-                    <label
-                      key={p.id}
-                      className={`flex cursor-pointer gap-3 rounded-lg border p-3 text-sm transition ${
-                        promptId === p.id
-                          ? "border-accent bg-amber-50"
-                          : "border-stone-200 hover:border-stone-300"
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="prompt"
-                        checked={promptId === p.id}
-                        onChange={() => {
-                          setPromptId(p.id);
-                          persist({ promptId: p.id });
-                        }}
-                        className="mt-1 accent-accent"
-                      />
-                      <span>
-                        <span className="font-medium">{p.label}</span>
-                        <span className="block text-stone-500">{p.text}</span>
-                      </span>
+                {isSupplement ? (
+                  renderSupplementFields()
+                ) : (
+                  <>
+                    <label className="block text-sm font-medium text-stone-700">
+                      Which prompt is this essay answering?
                     </label>
-                  ))}
-                </div>
+                    <div className="mt-3 space-y-2">
+                      {COMMON_APP_PROMPTS.map((p) => (
+                        <label
+                          key={p.id}
+                          className={`flex cursor-pointer gap-3 rounded-lg border p-3 text-sm transition ${
+                            promptId === p.id
+                              ? "border-accent bg-amber-50"
+                              : "border-stone-200 hover:border-stone-300"
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="prompt"
+                            checked={promptId === p.id}
+                            onChange={() => {
+                              setPromptId(p.id);
+                              persist({ promptId: p.id });
+                            }}
+                            className="mt-1 accent-accent"
+                          />
+                          <span>
+                            <span className="font-medium">{p.label}</span>
+                            <span className="block text-stone-500">{p.text}</span>
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  </>
+                )}
                 <button
                   onClick={generateDraft}
-                  disabled={busy !== null || !promptId}
+                  disabled={
+                    busy !== null ||
+                    (isSupplement ? !customPrompt.trim() : !promptId)
+                  }
                   className="mt-4 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-white transition hover:opacity-90 disabled:opacity-40"
                 >
                   {busy === "draft"
@@ -400,10 +494,12 @@ export default function EssayWorkspace({ initialEssay }: { initialEssay: Essay }
                 </label>
                 <span
                   className={`text-xs ${
-                    words > 650 ? "font-semibold text-red-600" : "text-stone-400"
+                    !isSupplement && words > 650
+                      ? "font-semibold text-red-600"
+                      : "text-stone-400"
                   }`}
                 >
-                  {words} / 650 words
+                  {isSupplement ? `${words} words` : `${words} / 650 words`}
                 </span>
               </div>
               <textarea

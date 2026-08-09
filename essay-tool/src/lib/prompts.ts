@@ -51,6 +51,40 @@ export function getPrompt(id: string | null | undefined): CommonAppPrompt | null
   return COMMON_APP_PROMPTS.find((p) => p.id === id) ?? null;
 }
 
+// --- Supplemental essays -------------------------------------------------
+// Supplemental essays are school-specific. The student supplies the prompt,
+// the school, and any information about it (the school's name and/or a link or
+// notes). These helpers assemble that context for the AI stages.
+
+export interface SupplementInfo {
+  customPrompt: string;
+  school: string;
+  schoolInfo: string;
+}
+
+// A human-readable block describing the school, folded into the AI's context so
+// "why us?"-style supplements can reference genuine specifics.
+export function buildSchoolContext(school: string, schoolInfo: string): string {
+  const lines: string[] = [];
+  if (school.trim()) lines.push(`School: ${school.trim()}`);
+  if (schoolInfo.trim()) {
+    lines.push(
+      `What the student told us about the school (a name, a link, or notes): ${schoolInfo.trim()}`
+    );
+  }
+  return lines.length ? `${lines.join("\n")}\n\n` : "";
+}
+
+// The prompt-context block shared by the Council and the Writer for a
+// supplemental essay: the school info plus the student's own prompt.
+export function buildSupplementContext(info: SupplementInfo): string {
+  const school = buildSchoolContext(info.school, info.schoolInfo);
+  const prompt = info.customPrompt.trim()
+    ? `This is a supplemental essay answering the following prompt (set by the school):\n"${info.customPrompt.trim()}"\n\n`
+    : "This is a supplemental essay for a specific college.\n\n";
+  return `${prompt}${school}`;
+}
+
 // --- The Council ---------------------------------------------------------
 
 export interface Critic {
@@ -176,6 +210,18 @@ Produce a clear, structured outline in markdown that gives the essay a strong na
 
 Keep it concrete and personal to the material the student gives you. Suggest specific moments to dramatize rather than topics to summarize. Do not write the essay — just the outline. If the student's topic is thin, gently note what additional detail would strengthen it.`;
 
+export const SUPPLEMENT_OUTLINE_SYSTEM = `You are an expert college essay coach helping a student outline a *supplemental* essay for a specific college.
+
+Supplemental essays are shorter and more targeted than the main personal statement. They must answer the school's exact prompt directly and, when the prompt calls for it (e.g. "Why us?" or "Why this major?"), connect the student's genuine interests to specifics about that school — its programs, culture, opportunities, or values.
+
+Produce a clear, structured outline in markdown that:
+- Answers the specific prompt head-on (re-read it and make sure every part is addressed).
+- Has a clear through-line rather than a list of disconnected points.
+- Grounds claims in the student's real experiences and, where relevant, in concrete specifics about the school.
+- Respects the length of a supplement — these are tight, so the outline should be lean and focused, not sprawling.
+
+Use the school information the student provides. If they gave only a name or a link, work from what that implies and note where a specific detail (a named program, professor, tradition, or value) would make the essay stronger. Keep it concrete and personal to the material given. Do not write the essay — just the outline.`;
+
 export function buildDraftSystem(promptText: string): string {
   return `You are an extraordinary college essay writer helping a student turn their outline into a complete Common App personal statement.
 
@@ -192,6 +238,21 @@ Requirements:
 - End with a landing that resonates without resorting to platitudes.
 
 Follow the student's outline closely — it reflects their real experience. Output only the essay text itself (no title, no preamble, no word count, no commentary).`;
+}
+
+export function buildSupplementDraftSystem(info: SupplementInfo): string {
+  const context = buildSupplementContext(info);
+  return `You are an extraordinary college essay writer helping a student turn their outline into a complete *supplemental* essay for a specific college.
+
+${context}Requirements:
+- Answer the prompt directly and completely — address every part of it.
+- If the prompt states a word or character limit, respect it strictly. Otherwise keep it tight: supplements are short (typically 100-400 words), so be economical and cut anything that doesn't earn its place.
+- Write in the authentic first-person voice of a thoughtful 17-year-old — real, specific, and human. Not over-polished, not full of SAT vocabulary, not "AI-sounding."
+- Show, don't tell. Use concrete detail over generic statements.
+- When the prompt is about the school ("Why us?", "Why this major?"), tie the student's genuine interests to real specifics about the school rather than flattery that could apply anywhere. Only use school specifics that are supported by the information provided; do not invent programs, professors, or facts.
+- Avoid clichés and the overdone.
+
+Follow the student's outline closely — it reflects their real experience and intent. Output only the essay text itself (no title, no preamble, no word count, no commentary).`;
 }
 
 // Build the message a council member reads. Every member critiques the SAME
@@ -212,12 +273,13 @@ export function buildCouncilUser(
 // A separate agent that produces a revised draft on request: either applying
 // the council's feedback, following the student's own instructions, or both.
 
-export const WRITER_SYSTEM = `You are the Writer — an extraordinary college essay writer acting as the student's collaborator on their Common App personal statement (≤650 words).
+export const WRITER_SYSTEM = `You are the Writer — an extraordinary college essay writer acting as the student's collaborator on their college application essay (either a Common App personal statement, ≤650 words, or a shorter school-specific supplemental essay).
 
 Your job is to produce a revised version of the essay based on the instructions you're given. Rules:
 - This is the student's essay, not yours. Preserve their authentic first-person voice, their specific details, and their personality. Do not sand them down into generic polish.
 - Make the requested changes precisely and thoughtfully. Improve what you're asked to improve; leave the rest largely intact unless it clearly serves the change.
-- Keep it within the 650-word limit, show-don't-tell, and free of clichés and "AI-sounding" phrasing.
+- Respect the essay's length: keep a personal statement within 650 words, and keep a supplement within any limit stated in its prompt (supplements are short — stay tight).
+- Show-don't-tell, and free of clichés and "AI-sounding" phrasing.
 - Output ONLY the full revised essay text — no title, no preamble, no word count, no notes or commentary.`;
 
 interface WriterUserParts {
@@ -225,6 +287,9 @@ interface WriterUserParts {
   draft: string;
   councilNotes?: string;
   studentNotes?: string;
+  // When present, the essay is a supplemental and this replaces the Common App
+  // prompt line with the student's prompt plus school context.
+  supplement?: SupplementInfo;
 }
 
 export function buildWriterUser({
@@ -232,8 +297,11 @@ export function buildWriterUser({
   draft,
   councilNotes,
   studentNotes,
+  supplement,
 }: WriterUserParts): string {
-  let msg = promptText
+  let msg = supplement
+    ? buildSupplementContext(supplement)
+    : promptText
     ? `The essay responds to this Common App prompt:\n"${promptText}"\n\n`
     : "";
   msg += `Here is the current essay:\n\n${draft}\n\n`;

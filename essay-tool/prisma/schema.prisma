@@ -10,7 +10,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// One essay the student is working on. For now, always a Personal Statement.
+// One essay the student is working on.
+// type is either PERSONAL_STATEMENT (Common App essay, prompt chosen from a
+// fixed list) or SUPPLEMENTAL (school-specific essay: the student supplies the
+// prompt, their own outline, and information about the school).
 model Essay {
   id        String   @id @default(cuid())
   title     String
@@ -20,8 +23,15 @@ model Essay {
   topic     String   @default("") // optional seed for AI-generated outlines
   outline   String   @default("")
 
-  // The prompt the essay answers (a Common App prompt id; see src/lib/prompts.ts)
+  // The prompt the essay answers (a Common App prompt id; see src/lib/prompts.ts).
+  // Used for PERSONAL_STATEMENT essays.
   promptId  String?
+
+  // For SUPPLEMENTAL essays: the prompt text the student pastes in themselves,
+  // plus the school it's for and any info (name or a link/notes) about it.
+  customPrompt String @default("")
+  school       String @default("")
+  schoolInfo   String @default("")
 
   // The current working draft (Stage 2 / Stage 3)
   draft     String   @default("")
