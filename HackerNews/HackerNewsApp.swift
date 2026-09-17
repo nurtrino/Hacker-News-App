@@ -7,6 +7,7 @@ final class AppModel: ObservableObject {
     let settings: AppSettings
     let library: LibraryStore
     let feeds: FeedStores
+    let lobsters: LobstersFeedStores
     let opener: LinkOpener
 
     init() {
@@ -14,6 +15,7 @@ final class AppModel: ObservableObject {
         self.settings = settings
         library = LibraryStore()
         feeds = FeedStores()
+        lobsters = LobstersFeedStores()
         opener = LinkOpener(settings: settings)
     }
 }
@@ -29,6 +31,7 @@ struct HackerNewsApp: App {
                 .environmentObject(model.settings)
                 .environmentObject(model.library)
                 .environmentObject(model.feeds)
+                .environmentObject(model.lobsters)
                 .environmentObject(model.opener)
         }
         .onChange(of: scenePhase) { phase in

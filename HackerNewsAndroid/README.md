@@ -38,6 +38,12 @@ and recent searches. Saved stories and read state persisted to disk. User
 profiles with their recent stories or comments. Settings for theme, text size,
 default feed, tap behaviour, link target, auto-collapse and source badges.
 
+A separate **Lobsters** tab reads [lobste.rs](https://lobste.rs) via its JSON
+endpoints — Active by default, plus Hottest and Newest — with tags on each
+row and the story's own `.json` feeding the same collapsible comment view.
+Lobsters posts are marked read but aren't saveable, and authors open on the
+site.
+
 ## Layout
 
 ```
@@ -50,16 +56,19 @@ HackerNewsAndroid/
       AndroidManifest.xml
       java/com/nurtrino/hackernews/
         MainActivity.kt        Activity, nav graph, bottom bar
-        model/Models.kt        Item, HnUser, CommentNode, Feed, LoadPhase
+        model/Models.kt        Item, HnUser, CommentNode, Feed, Forum, LoadPhase
+        model/Lobsters.kt      Lobsters feeds, story, id folding, HTML shim
         net/
           Http.kt              Shared OkHttp client + disk cache
           HnApi.kt             Firebase client, memoised, bounded concurrency
           AlgoliaApi.kt        Search + whole-thread fetch
+          LobstersApi.kt       lobste.rs JSON: lists + whole threads
         text/HnHtml.kt         HN's HTML subset → renderable blocks
         data/
           Settings.kt          Preferences, SharedPreferences-backed
           Library.kt           Saved stories + read state, JSON on disk
           ViewModels.kt        Feed / thread / search / user state
+          LobstersViewModels.kt Lobsters feed pagination + thread state
         ui/
           Theme.kt             Palette, type scale, thread colours
           Common.kt            Link routing, formatting, shared composables
@@ -67,6 +76,7 @@ HackerNewsAndroid/
           StoryRow.kt          Shared story row + long-press menu
           CommentRow.kt        Depth rails, collapse, header
           FeedScreen.kt  StoryScreen.kt  SearchScreen.kt
+          LobstersScreen.kt  LobstersStoryScreen.kt
           SavedScreen.kt SettingsScreen.kt UserScreen.kt
       res/                     Adaptive icon, themes, strings
 ```
@@ -125,4 +135,4 @@ wrapper checked in; CI provisions Gradle 8.11.1 via `gradle/actions/setup-gradle
 - **Storage.** Saved stories and read state live in the app's `files/library/`.
   HTTP responses are cached by OkHttp in `cache/http` (128 MB), cleared from
   Settings.
-- Unofficial and unaffiliated with Y Combinator.
+- Unofficial and unaffiliated with Y Combinator or Lobsters.

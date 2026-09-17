@@ -4,6 +4,10 @@ A native Hacker News client for **iOS** and **Android**, built on the two
 public HN APIs — Firebase for feeds, items and profiles; HN Search (Algolia)
 for full-text search and for pulling a whole comment tree in one request.
 
+A second tab reads [Lobsters](https://lobste.rs) through the site's own JSON
+endpoints (`/active.json` and friends), with the same story rows, threaded
+comments and link handling.
+
 No third-party runtime dependencies, no accounts, no analytics.
 
 | | Source | Docs | CI |
@@ -36,4 +40,4 @@ Neither project needs anything checked out beyond this repo. The workflows run
 on every push to the dev branch, or on demand from the **Actions** tab. See
 each project's README for local build instructions.
 
-Unofficial and unaffiliated with Y Combinator.
+Unofficial and unaffiliated with Y Combinator or Lobsters.
