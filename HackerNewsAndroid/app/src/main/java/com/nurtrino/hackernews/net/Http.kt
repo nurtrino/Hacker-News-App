@@ -50,9 +50,14 @@ object Http {
         client ?: throw IllegalStateException("Http.init(context) was never called")
 
     /** GET the URL as text. [forceRefresh] bypasses the disk cache. */
-    suspend fun getString(url: String, forceRefresh: Boolean = false): String =
+    suspend fun getString(
+        url: String,
+        forceRefresh: Boolean = false,
+        headers: Map<String, String> = emptyMap(),
+    ): String =
         withContext(Dispatchers.IO) {
             val builder = Request.Builder().url(url)
+            for ((name, value) in headers) builder.header(name, value)
             if (forceRefresh) builder.cacheControl(CacheControl.FORCE_NETWORK)
             try {
                 requireClient().newCall(builder.build()).execute().use { response ->

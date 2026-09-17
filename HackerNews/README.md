@@ -17,6 +17,12 @@ Requires iOS 16.0 or later. iPhone and iPad.
 scroll position and cache. Pull to refresh, infinite scroll, rank numbers on
 the ordered lists.
 
+**Lobsters** — a separate tab for [lobste.rs](https://lobste.rs): the Active
+list by default, with Hottest and Newest in the switcher. Stories show their
+tags, and threads come straight from the story's `.json` (already
+thread-sorted) into the same collapsible comment view. Lobsters posts are
+marked read like HN ones but aren't saveable, and authors open on the site.
+
 **Discussions** — the whole comment tree arrives in one request, so threads
 open in about as long as one round trip. Comments are indented with a coloured
 rail per level, collapse by tapping the header (with a `+N` badge showing how
@@ -56,14 +62,17 @@ HackerNews/
     Item.swift                  Story/comment/job/poll, lenient decoding
     Feed.swift                  The six story lists
     HNUser.swift                Account profile
-    CommentNode.swift           Flattened, depth-tagged comment
+    CommentNode.swift           Flattened, depth-tagged comment (+ Forum)
+    Lobsters.swift              Lobsters feeds, story, id folding, HTML shim
   Networking/
     HNAPI.swift                 Firebase client: actor, memoised, de-duplicated
     AlgoliaAPI.swift            Search + whole-thread fetch
+    LobstersAPI.swift           lobste.rs JSON: lists + whole threads
   Stores/
     AppSettings.swift           Preferences, persisted to UserDefaults
     FeedStore.swift             One paginated story list (+ the registry)
     ThreadStore.swift           Thread loading, flattening, collapse state
+    LobstersStore.swift         Lobsters feed pagination + thread state
     SearchStore.swift           Debounced, paginated search
     LibraryStore.swift          Saved stories + read state, persisted to disk
   Support/
@@ -75,6 +84,8 @@ HackerNews/
     RootView.swift              Tab bar, theme and text-size overrides
     FeedScreen.swift            Feed switcher + story list
     StoryScreen.swift           Story header + comments
+    LobstersScreen.swift        Lobsters tab, story row, tag chips
+    LobstersStoryScreen.swift   Lobsters story header + comments
     CommentRow.swift            Depth rails, collapse, context menu
     StoryRow.swift              Shared story row + swipe/long-press actions
     SearchScreen.swift          Search, filters, recents
@@ -143,4 +154,4 @@ ditto -c -k --sequesterRsrc --keepParent Payload HackerNews-unsigned.ipa
   `Application Support/HackerNews/`. Network responses are cached by
   `URLCache` (128 MB on disk for the API, 64 MB for search); both are cleared
   from Settings.
-- Unofficial and unaffiliated with Y Combinator.
+- Unofficial and unaffiliated with Y Combinator or Lobsters.

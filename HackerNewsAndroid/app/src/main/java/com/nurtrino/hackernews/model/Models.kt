@@ -61,16 +61,7 @@ data class Item(
     val primaryUrl: String get() = link ?: hnUrl
 
     /** `example.com` for `https://www.example.com/a/b`. */
-    val host: String?
-        get() {
-            val raw = link ?: return null
-            val afterScheme = raw.substringAfter("://", "")
-            if (afterScheme.isEmpty()) return null
-            val authority = afterScheme.substringBefore('/').substringBefore('?').substringBefore('#')
-            val hostOnly = authority.substringAfterLast('@').substringBefore(':')
-            if (hostOnly.isEmpty()) return null
-            return hostOnly.removePrefix("www.")
-        }
+    val host: String? get() = hostOf(link)
 
     val commentCount: Int get() = descendants ?: 0
 
@@ -86,6 +77,32 @@ data class Item(
             if (lowered.startsWith("show hn")) return "S"
             return "Y"
         }
+}
+
+/** `example.com` for `https://www.example.com/a/b`; null when there's no usable link. */
+fun hostOf(link: String?): String? {
+    val raw = link ?: return null
+    val afterScheme = raw.substringAfter("://", "")
+    if (afterScheme.isEmpty()) return null
+    val authority = afterScheme.substringBefore('/').substringBefore('?').substringBefore('#')
+    val hostOnly = authority.substringAfterLast('@').substringBefore(':')
+    if (hostOnly.isEmpty()) return null
+    return hostOnly.removePrefix("www.")
+}
+
+/** The sites the app reads from. */
+enum class Forum(val title: String) {
+    HACKER_NEWS("Hacker News"),
+    LOBSTERS("Lobsters");
+
+    /** The author's profile page on this site. */
+    fun profileUrl(username: String): String {
+        val encoded = java.net.URLEncoder.encode(username, "UTF-8")
+        return when (this) {
+            HACKER_NEWS -> "https://news.ycombinator.com/user?id=$encoded"
+            LOBSTERS -> "https://lobste.rs/~$encoded"
+        }
+    }
 }
 
 /** A Hacker News account profile. */
@@ -108,14 +125,24 @@ data class CommentNode(
     val id: Int,
     val parent: Int?,
     val author: String?,
-    /** Raw HN comment HTML — parsed lazily and memoised. */
+    /** Raw comment HTML — parsed lazily and memoised. */
     val html: String,
     val time: Long?,
     val depth: Int,
     val isDeleted: Boolean,
     val descendantCount: Int = 0,
+    /** Which site the comment came from; decides where "open on…" links go. */
+    val forum: Forum = Forum.HACKER_NEWS,
+    /** The comment's own page, for sites whose URLs aren't derivable from [id]. */
+    val permalink: String? = null,
 ) {
     val isTopLevel: Boolean get() = depth == 0
+
+    /** The comment's web page. */
+    val webUrl: String get() = permalink ?: "https://news.ycombinator.com/item?id=$id"
+
+    /** The author's profile page on the comment's site. */
+    val authorUrl: String? get() = author?.let { forum.profileUrl(it) }
 }
 
 /** Fills in [CommentNode.descendantCount] in one pass using a stack of open ancestors. */

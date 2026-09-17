@@ -7,7 +7,7 @@ struct RootView: View {
     @State private var tab: Tab = .stories
 
     enum Tab: Hashable {
-        case stories, search, saved, settings
+        case stories, lobsters, search, saved, settings
     }
 
     var body: some View {
@@ -15,6 +15,10 @@ struct RootView: View {
             FeedScreen()
                 .tabItem { Label("Stories", systemImage: "newspaper") }
                 .tag(Tab.stories)
+
+            LobstersScreen()
+                .tabItem { Label("Lobsters", systemImage: "fish") }
+                .tag(Tab.lobsters)
 
             SearchScreen()
                 .tabItem { Label("Search", systemImage: "magnifyingglass") }

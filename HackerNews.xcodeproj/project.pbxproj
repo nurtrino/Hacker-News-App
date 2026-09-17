@@ -36,6 +36,11 @@
 		1B0000000000000000000145 /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000144 /* SafariView.swift */; };
 		1B0000000000000000000147 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000146 /* Components.swift */; };
 		1B000000000000000000014E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1B000000000000000000014D /* Assets.xcassets */; };
+		1B0000000000000000000151 /* Lobsters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000150 /* Lobsters.swift */; };
+		1B0000000000000000000153 /* LobstersAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000152 /* LobstersAPI.swift */; };
+		1B0000000000000000000155 /* LobstersStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000154 /* LobstersStore.swift */; };
+		1B0000000000000000000157 /* LobstersScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000156 /* LobstersScreen.swift */; };
+		1B0000000000000000000159 /* LobstersStoryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B0000000000000000000158 /* LobstersStoryScreen.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +75,11 @@
 		1B0000000000000000000146 /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
 		1B000000000000000000014D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1B000000000000000000014F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1B0000000000000000000150 /* Lobsters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lobsters.swift; sourceTree = "<group>"; };
+		1B0000000000000000000152 /* LobstersAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LobstersAPI.swift; sourceTree = "<group>"; };
+		1B0000000000000000000154 /* LobstersStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LobstersStore.swift; sourceTree = "<group>"; };
+		1B0000000000000000000156 /* LobstersScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LobstersScreen.swift; sourceTree = "<group>"; };
+		1B0000000000000000000158 /* LobstersStoryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LobstersStoryScreen.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +131,7 @@
 				1B0000000000000000000114 /* Feed.swift */,
 				1B0000000000000000000116 /* HNUser.swift */,
 				1B0000000000000000000118 /* CommentNode.swift */,
+				1B0000000000000000000150 /* Lobsters.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -130,6 +141,7 @@
 			children = (
 				1B000000000000000000011A /* HNAPI.swift */,
 				1B000000000000000000011C /* AlgoliaAPI.swift */,
+				1B0000000000000000000152 /* LobstersAPI.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -142,6 +154,7 @@
 				1B0000000000000000000122 /* FeedStore.swift */,
 				1B0000000000000000000124 /* ThreadStore.swift */,
 				1B0000000000000000000126 /* SearchStore.swift */,
+				1B0000000000000000000154 /* LobstersStore.swift */,
 			);
 			path = Stores;
 			sourceTree = "<group>";
@@ -172,6 +185,8 @@
 				1B0000000000000000000142 /* RichText.swift */,
 				1B0000000000000000000144 /* SafariView.swift */,
 				1B0000000000000000000146 /* Components.swift */,
+				1B0000000000000000000156 /* LobstersScreen.swift */,
+				1B0000000000000000000158 /* LobstersStoryScreen.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -273,6 +288,11 @@
 				1B0000000000000000000143 /* RichText.swift in Sources */,
 				1B0000000000000000000145 /* SafariView.swift in Sources */,
 				1B0000000000000000000147 /* Components.swift in Sources */,
+				1B0000000000000000000151 /* Lobsters.swift in Sources */,
+				1B0000000000000000000153 /* LobstersAPI.swift in Sources */,
+				1B0000000000000000000155 /* LobstersStore.swift in Sources */,
+				1B0000000000000000000157 /* LobstersScreen.swift in Sources */,
+				1B0000000000000000000159 /* LobstersStoryScreen.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

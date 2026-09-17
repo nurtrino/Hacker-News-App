@@ -58,7 +58,7 @@ struct CommentRow: View {
     private var header: some View {
         HStack(spacing: 8) {
             Button {
-                if let author = node.author { path.append(Route.user(author)) }
+                openAuthor()
             } label: {
                 Text(node.author ?? "unknown")
                     .font(.caption.weight(.semibold))
@@ -113,7 +113,7 @@ struct CommentRow: View {
 
         if let author = node.author {
             Button {
-                path.append(Route.user(author))
+                openAuthor()
             } label: {
                 Label("View \(author)", systemImage: "person")
             }
@@ -133,11 +133,21 @@ struct CommentRow: View {
         Button {
             opener.open(commentURL)
         } label: {
-            Label("Open on Hacker News", systemImage: "network")
+            Label("Open on \(node.forum.name)", systemImage: "network")
         }
     }
 
-    private var commentURL: URL {
-        URL(string: "https://news.ycombinator.com/item?id=\(node.id)")!
+    private var commentURL: URL { node.webURL }
+
+    /// HN authors get the in-app profile; other sites open the profile page
+    /// in the browser, since there's no matching screen for them.
+    private func openAuthor() {
+        guard let author = node.author else { return }
+        switch node.forum {
+        case .hackerNews:
+            path.append(Route.user(author))
+        case .lobsters:
+            if let url = node.authorURL { opener.open(url) }
+        }
     }
 }

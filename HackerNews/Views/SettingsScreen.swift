@@ -72,6 +72,7 @@ struct SettingsScreen: View {
                     Button {
                         Task {
                             await HNAPI.shared.clearCache()
+                            await LobstersAPI.shared.clearCache()
                             RichTextCache.shared.clear()
                             cacheCleared = true
                             Haptics.success()

@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
@@ -30,6 +31,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.nurtrino.hackernews.data.FeedsViewModel
 import com.nurtrino.hackernews.data.Library
+import com.nurtrino.hackernews.data.LobstersThreadViewModel
+import com.nurtrino.hackernews.data.LobstersViewModel
 import com.nurtrino.hackernews.data.SearchViewModel
 import com.nurtrino.hackernews.data.Settings
 import com.nurtrino.hackernews.data.ThreadViewModel
@@ -37,6 +40,8 @@ import com.nurtrino.hackernews.data.UserViewModel
 import com.nurtrino.hackernews.net.Http
 import com.nurtrino.hackernews.ui.FeedScreen
 import com.nurtrino.hackernews.ui.HackerNewsTheme
+import com.nurtrino.hackernews.ui.LobstersScreen
+import com.nurtrino.hackernews.ui.LobstersStoryScreen
 import com.nurtrino.hackernews.ui.SavedScreen
 import com.nurtrino.hackernews.ui.SearchScreen
 import com.nurtrino.hackernews.ui.SettingsScreen
@@ -72,12 +77,13 @@ class MainActivity : ComponentActivity() {
 
 private sealed class Tab(val route: String, val label: String) {
     data object Stories : Tab("stories", "Stories")
+    data object Lobsters : Tab("lobsters", "Lobsters")
     data object Search : Tab("search", "Search")
     data object Saved : Tab("saved", "Saved")
     data object SettingsTab : Tab("settings", "Settings")
 }
 
-private val TABS = listOf(Tab.Stories, Tab.Search, Tab.Saved, Tab.SettingsTab)
+private val TABS = listOf(Tab.Stories, Tab.Lobsters, Tab.Search, Tab.Saved, Tab.SettingsTab)
 
 @Composable
 private fun Root(settings: Settings, library: Library) {
@@ -87,6 +93,7 @@ private fun Root(settings: Settings, library: Library) {
 
     // Activity-scoped so switching tabs keeps feed state and search results.
     val feeds: FeedsViewModel = viewModel()
+    val lobsters: LobstersViewModel = viewModel()
     val search: SearchViewModel = viewModel()
 
     Scaffold(
@@ -121,6 +128,9 @@ private fun Root(settings: Settings, library: Library) {
             composable(Tab.Stories.route) {
                 FeedScreen(feeds, settings, library) { navController.navigate("story/$it") }
             }
+            composable(Tab.Lobsters.route) {
+                LobstersScreen(lobsters, settings, library) { navController.navigate("lobsters/$it") }
+            }
             composable(Tab.Search.route) {
                 SearchScreen(search, settings, library) { navController.navigate("story/$it") }
             }
@@ -148,6 +158,21 @@ private fun Root(settings: Settings, library: Library) {
                 )
             }
             composable(
+                route = "lobsters/{id}",
+                arguments = listOf(navArgument("id") { type = NavType.StringType }),
+            ) { entry ->
+                val id = entry.arguments?.getString("id") ?: return@composable
+                val model: LobstersThreadViewModel = viewModel(
+                    key = "lobsters-$id",
+                    factory = simpleFactory { LobstersThreadViewModel(id, lobsters.story(id)) },
+                )
+                LobstersStoryScreen(
+                    model = model,
+                    settings = settings,
+                    onBack = { navController.popBackStack() },
+                )
+            }
+            composable(
                 route = "user/{name}",
                 arguments = listOf(navArgument("name") { type = NavType.StringType }),
             ) { entry ->
@@ -171,6 +196,7 @@ private fun Root(settings: Settings, library: Library) {
 
 private fun iconFor(tab: Tab) = when (tab) {
     Tab.Stories -> Icons.Filled.Home
+    Tab.Lobsters -> Icons.Filled.List
     Tab.Search -> Icons.Filled.Search
     Tab.Saved -> Icons.Filled.Star
     Tab.SettingsTab -> Icons.Filled.Settings
