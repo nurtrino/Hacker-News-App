@@ -34,8 +34,19 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+      # ubuntu-latest ships a full Android SDK (ANDROID_HOME is preset), so
+      # only the licences need accepting. The setup-android action used to do
+      # this but also installs the legacy 'tools' package, which Google has
+      # removed from the repository, so it now fails before Gradle runs.
+      - name: Accept Android SDK licences
+        run: |
+          set -euo pipefail
+          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          if [ ! -x "$SDKMANAGER" ]; then
+            SDKMANAGER=$(ls -d "$ANDROID_HOME"/cmdline-tools/*/bin/sdkmanager | sort -V | tail -1)
+          fi
+          yes | "$SDKMANAGER" --licenses >/dev/null 2>&1 || true
+          "$SDKMANAGER" --list_installed 2>/dev/null | head -40 || true
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
